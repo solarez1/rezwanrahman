@@ -1,0 +1,20 @@
+{
+    "name":  "SEP_MANAGEMENT",
+    "description":  "Installs SEP Management",
+    "json_class":  "Chef::Role",
+    "default_attributes":  {
+
+                            },
+    "override_attributes":  {
+
+                            },
+    "chef_type":  "role",
+    "run_list":  [
+                     "recipe[sdl_aws_base]",
+                     "recipe[sep_management]"
+
+                 ],
+    "env_run_lists":  {
+
+                      }
+}
