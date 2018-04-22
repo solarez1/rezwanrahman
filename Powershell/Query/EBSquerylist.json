@@ -1,0 +1,8 @@
+{
+    "q1":  "Did the VPC deploy successfully?",
+    "q2":  "Did the EC2 Instance deploy successfully?",
+    "q3":  "Were you able to display an EBS snapshot?",
+    "q4":  "Did the restoration of an EBS snapshot succeed?",
+    "q5":  "Were you able to log in to the EC2 instance successfully?",
+    "q6":  "Did the cleanup function remove all the resources created by this module?"
+}

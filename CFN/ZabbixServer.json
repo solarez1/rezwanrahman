@@ -1,0 +1,734 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+
+	"Description": "Creates a zabbix server. This script creates an Auto Scaling Group with a simple health check of the Zabbix server providing auto healing.",
+
+	"Parameters": {
+		"Lambda": {
+			"Type": "String",
+			"Default": "arn:aws:lambda:eu-west-1:436437695588:function:CustomAMILookup",
+			"Description": "The ARN of the lambda function from a supported region."
+		},
+		"Hostname": {
+			"Type": "String",
+			"Default": "zabserver01.sdlproducts.com",
+			"Description": "The hostname of the Zabbix proxy server"
+		},
+		"VpcId" : {
+	      "Type" : "String",
+	      "Default" : "vpc-34c50651",
+	      "Description" : "VpcId of your existing Virtual Private Cloud (VPC)"
+	    },
+		"VpcSharedSecurityGroup": {
+			"Type": "String",
+			"Default": "sg-8d7846f6",
+			"Description": "Security Group Id of your existing VPC Shared Security Group"
+		},   
+	    "RDSSecurityGroup1" : {
+	      "Type" : "String",
+	      "Default" : "sg-1ccd7f67",
+	      "Description" : "RDS Security group for postgresql"
+	    },
+	    "RDSSecurityGroup2" : {
+	      "Type" : "String",
+	      "Default" : "sg-f42eab91",
+	      "Description" : "RDS Security group for postgresql"
+	    },	    
+	     "ChefValidator":{
+	      "Description": "Name of the chef validator.",
+	      "Type": "String",
+	      "MinLength": "1",
+		  "Default" : "sdl-infrastructure-cfgmgmt-validator",
+	      "ConstraintDescription": "Must be a non empty string."
+	    },
+	   	"ChefRole": {
+			"Type": "String",
+			"Default": "ZABBIX_SERVER_PROD",
+			"Description": "This is the Chef role for this instance"
+		},
+	    "PublicSubnetIDA" : {
+	      	"Type" : "String",
+	      	"Default": "subnet-cc5fac95",
+	      	"Description" : "The SubnetId for an existing Subnet in your Virtual Private Cloud (VPC)"
+	    },
+	    "PublicSubnetIDB" : {
+	      "Type" : "String",
+	      "Default": "subnet-04a01161",
+	      "Description" : "The SubnetId for an existing Subnet in your Virtual Private Cloud (VPC)"
+	    },
+		"AvailabilityZoneA": {
+			"Type": "String",
+			"Default": "eu-west-1a",
+			"Description": "Name of the availability zone in which the servers will be created."
+		},
+		"AvailabilityZoneB": {
+			"Type": "String",
+			"Default": "eu-west-1b",
+			"Description": "Name of the availability zone in which the servers will be created."
+		},
+		"Region":{
+			"Type": "String",
+			"Default": "eu-west-1",
+			"Description":"Provide the region of the s3 bucket containing the PEM file"
+		},
+		"SSLCertArn": {
+			"Description": "ARN of the SSL certificate that will be deployed on ELB",
+			"Type": "String",
+			"Default": "arn:aws:acm:eu-west-1:436437695588:certificate/8579f164-0b15-4ba6-bf92-82eac8d352df",
+			"ConstraintDescription": "Must be a valid SSL ARN."
+		},	
+		"ModuleName": {
+			"Description": "The name of the JavaScript file",
+			"Type": "String",
+			"Default": "amilookup"
+		},
+		"ChefServerURL": {
+	      "Description": "URL of the Chef Server.",
+	      "Type": "String",
+	      "MinLength": "1",
+		  "Default": "https://api.chef.io/organizations/sdl-infrastructure-cfgmgmt",
+	      "ConstraintDescription": "Must be a non empty string."
+	    },
+		 "S3Bucket": {
+		  "Description": "Provide the S3 bucket which contains the Chef Validator key.",	      
+		  "Type": "String",
+		  "Default": "zab-chefvalidator-dub",
+		  "ConstraintDescription": "Must be a non empty string."
+		},
+		"InstanceType": {
+			"Description": "Zabbix Server EC2 instance type",
+			"Type": "String",
+			"Default": "m4.2xlarge",
+			"ConstraintDescription": "Must be a valid, EC2 instance type."
+		},
+		"InstanceCountMin": {
+			"Description": "Minimum number of EC2 instances in the auto scaling group.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"InstanceCountMax": {
+			"Description": "Maximum number of EC2 instances in the auto scaling group.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"InstanceCountInitial": {
+			"Description": "Desired (initial) number of EC2 instances in the auto scaling group.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"KeyName": {
+			"Type": "AWS::EC2::KeyPair::KeyName",
+			"MinLength": "1",
+			"MaxLength": "64",
+			"AllowedPattern": "[-_ a-zA-Z0-9]*",			
+			"Description": "The name of the key pair."
+		},
+		"EIPAllocationID": {
+			"Type": "String",
+			"Default": "eipalloc-1fa96622",
+			"Description": "Zabbix Server EIP - will associate this at launch"
+		},
+		"Date": {
+			"Type": "String",
+			"Default": "2016//12//07",
+			"MinLength": "10",
+			"Description": "Todays date in format YYYY//MM//DD"
+		}
+	},
+	"Mappings": {
+		"AWSInstanceType2Arch": {
+			"t2.medium": {
+				"Arch": "HVM64"
+			  },
+		  	"m4.2xlarge": {
+				"Arch": "HVM64"
+		  }
+	},
+	"AWSRegionGrace": {
+			"us-east-1": {
+				"grace": "6000"
+			},
+			"us-west-2": {
+				"grace": "6000"
+			},
+			"us-west-1": {
+				"grace": "6000"
+			},
+			"eu-west-1": {
+				"grace": "3000"
+			},
+			"ap-southeast-1": {
+				"grace": "6000"
+			},
+			"ap-southeast-2": {
+				"grace": "6000"
+			},
+			"ap-northeast-1": {
+				"grace": "6000"
+			},
+			"sa-east-1": {
+				"grace": "6000"
+			},
+			"eu-central-1": {
+				"grace": "6000"
+			}
+		}
+	},
+	"Resources": {
+	    "ZabbixELBSecurityGroup": {
+        "Type": "AWS::EC2::SecurityGroup",
+	  	"Properties": {
+        "GroupDescription": "Zabbix ELB Security Group to whitelist Zabbix Proxies",
+        "VpcId": { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [{
+            "IpProtocol" : "tcp",
+            "FromPort" : "22",
+            "ToPort" : "22",
+            "CidrIp" : "195.50.125.33/32",
+            "Description" : "MHD office allow ssh"
+		},
+		{
+            "IpProtocol" : "tcp",
+            "FromPort" : "443",
+            "ToPort" : "443",
+            "CidrIp" : "195.50.125.33/32",
+            "Description" : "MHD office allow SSL"
+		},
+		{
+			"IpProtocol": "tcp",
+			"FromPort": "443",
+			"ToPort": "443",
+			"CidrIp": "128.242.115.81/32",
+			"Description" : "SLG site allow SSL"
+		},
+		{
+			"IpProtocol": "tcp",
+			"FromPort": "443",
+			"ToPort": "443",
+			"CidrIp": "83.217.235.73/32",
+			"Description" : "SNJ site allow SSL"
+		}
+],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "ZabbixELBSecurityGroup"
+          }
+        ]
+      }
+    },
+    "ZabbixElasticLoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "Listeners": [         
+  		  {
+              "LoadBalancerPort": "22",
+              "InstancePort": "22",
+              "Protocol": "TCP",
+              "InstanceProtocol": "TCP"              
+          },
+          {
+              "LoadBalancerPort": "443",
+              "InstancePort": "80",
+              "Protocol": "HTTPS",
+              "InstanceProtocol": "HTTP",
+              "SSLCertificateId": { "Ref" : "SSLCertArn" }           
+          }
+        ],
+        "HealthCheck": {
+            "Target": "TCP:22",
+            "HealthyThreshold": "3",
+            "UnhealthyThreshold": "5",
+            "Interval": "20",
+            "Timeout": "10"
+        },
+        "ConnectionDrainingPolicy": {
+            "Enabled": "true",
+            "Timeout": "300"
+        },
+        "CrossZone": true,
+        "SecurityGroups": [
+          { "Ref": "ZabbixELBSecurityGroup" }
+        ],
+        "Subnets": [
+          {"Ref" : "PublicSubnetIDA"},
+          {"Ref" : "PublicSubnetIDB"}
+        ]
+      }
+    },
+	  "InstanceSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupDescription": "Security Group for the individual instances",
+				"VpcId": {
+					"Ref" : "VpcId"
+				},				
+				"SecurityGroupIngress": [			
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "10051",
+			"ToPort" : "10051",
+			"CidrIp" : "52.212.85.212/32",
+			"Description" : "Whitelist dubzabproxy01 EIP"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "10051",
+			"ToPort" : "10051",
+			"CidrIp" : "35.156.202.78/32",
+			"Description" : "Whitelist frazabproxy01 EIP"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "10051",
+			"ToPort" : "10051",
+			"CidrIp" : "34.211.163.226/32",
+			"Description" : "Whitelist orgzabproxy01 EIP"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "10051",
+			"ToPort" : "10051",
+			"CidrIp" : "52.199.75.240/32",
+			"Description" : "Whitelist tkozabproxy01 EIP"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "10051",
+			"ToPort" : "10051",
+			"CidrIp" : "10.202.4.70/23",
+			"Description" : "Whitelist snjzabproxyc01 cluster vip"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "10051",
+			"ToPort" : "10051",
+			"CidrIp" : "10.202.40.40/23",
+			"Description" : "Whitelist slgzabproxyc01 cluster vip"
+		},
+		{
+		  	"IpProtocol" : "tcp",
+		  	"FromPort" : "10051",
+		  	"ToPort" : "10051",			  
+		  	"SourceSecurityGroupId": { "Ref" : "RDSSecurityGroup1" },
+		  	"Description" : "Whitelist for RDS"
+		},
+		{
+		  	"IpProtocol" : "tcp",
+		  	"FromPort" : "10051",
+		  	"ToPort" : "10051",			  
+		  	"SourceSecurityGroupId": { "Ref" : "RDSSecurityGroup2" },
+		  	"Description" : "Whitelist for RDS"
+		},
+		{
+			"IpProtocol": "tcp",
+			"FromPort": "80",
+			"ToPort": "80",
+			"SourceSecurityGroupId": { "Ref" : "ZabbixELBSecurityGroup" },
+			"Description" : "Whitelist for ELB"
+		},
+		{
+			"IpProtocol": "tcp",
+			"FromPort": "22",
+			"ToPort": "22",
+			"SourceSecurityGroupId": { "Ref" : "ZabbixELBSecurityGroup" },
+			"Description" : "Whitelist for ELB"
+		}]
+	}
+},
+		  "ZabbixSecToRole": {
+	      "Type": "AWS::IAM::Role",
+	      "Properties": {
+	        "AssumeRolePolicyDocument": {
+	           "Version" : "2012-10-17",
+	           "Statement": [ {
+	              "Effect": "Allow",
+	              "Principal": {
+	                 "Service": [ "ec2.amazonaws.com" ]
+	              },
+	              "Action": [ "sts:AssumeRole" ]
+	           } ]
+	        },
+	        "ManagedPolicyArns": [ "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" ],
+	        "Path": "/",
+	        "Policies": [ {
+	          "PolicyName": "default-s3-bucket-policy",
+	          "PolicyDocument": {
+	            "Version": "2012-10-17",
+	            "Statement": [
+	              {
+	                "Effect": "Allow",
+	                "Action": [
+	                  "s3:Get*",
+	                  "s3:List*"
+	                ],
+	                "Resource": [
+	                  "arn:aws:s3:::zab-chef*"
+	                ]
+	              }
+	            ]
+	          }
+	        },
+	        {
+          "PolicyName": "send-ssm-role-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "ssm:*"
+                ],
+                "Resource": [ "*" ]
+	              }
+	            ]
+	          }
+	        },
+	        {
+          "PolicyName": "allow-kms-role-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "kms:*"
+                ],
+                "Resource": [ "arn:aws:kms:eu-west-1:436437695588:key/daa1a81b-70f2-4434-8cfd-5795a1e40ff0" ]
+	              }
+	            ]
+	          }
+	        },	 
+	        {
+	      "PolicyName": "default-aws-logs-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents",
+                  "logs:DescribeLogStreams"
+                ],
+                "Resource": [
+                  "arn:aws:logs:*:*:*"
+	                ]
+	              }
+	            ]
+	          }
+	      	},
+	      	{
+          "PolicyName": "ASGroup-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "autoscaling:*"
+                ],
+                "Resource": [ "*" ]
+	              }
+	            ]
+	          }
+	        },
+	        {
+	        		"PolicyName": "associate-elasticip",
+		"PolicyDocument": {
+			"Version": "2012-10-17",
+			"Statement": [{
+				"Effect": "Allow",
+				"Action": [
+				"ec2:AssociateAddress",
+				"ec2:DescribeAddresses",
+				"ec2:AllocateAddress",
+				"ec2:DisassociateAddress"
+								],
+				"Resource": ["*"]
+				}]
+			}
+		},       	
+	      	{
+          "PolicyName": "put-cloudwatch-alarm-policy",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "cloudwatch:*"
+                ],
+                "Resource": [
+                  "*"
+                ]
+              }
+            ]
+          }
+        }   
+        ]
+      }
+    },
+	    "ZabbixSecToInstanceProfile":{
+	      "Type": "AWS::IAM::InstanceProfile",
+	      "Properties": {
+	         "Path": "/",
+	         "Roles": [ { "Ref": "ZabbixSecToRole" } ]
+	      }
+	    },	    
+		"LaunchConfig": {
+	 "Type" : "AWS::AutoScaling::LaunchConfiguration",
+      "Metadata" : {
+        "Comment" : "Installs Chef From Ruby Gems, Creates Pre-Requisite Chef Configuration Files & Perform Chef Initial Run",
+        "AWS::CloudFormation::Init" : {
+          "configSets" : {
+ 						"default": ["1-config-prerequisites", "2-config", "3-chef", "4-elasticip"]
+					},
+					"1-config-prerequisites": {
+						"commands": {
+							"0-copy-validator-pem": {
+								"command": {
+									"Fn::Join": [
+										"", [
+											"aws s3 cp s3://",
+											{
+											"Ref": "S3Bucket"
+											},
+											"/sdl-infrastructure-cfgmgmt-validator.pem /etc/chef/validator.pem --region ",
+					   						{"Ref": "Region"},
+					   						" > /etc/chef/s3output 2>&1"
+										]
+									]
+								},
+								"waitAfterCompletion": "0"
+							}
+						}
+					},
+					"2-config": {
+						"packages": {
+							"rpm": {
+								"chef": "https://packages.chef.io/stable/el/6/chef-12.12.15-1.el6.x86_64.rpm"
+							}
+						},
+						"files": {
+							"/etc/chef/client.rb": {
+								"content": {
+									"Fn::Join": [
+										"\n", [
+											"log_level          :info",
+											"log_location       STDOUT",
+											"client_key         '/etc/chef/client.pem'",
+											{
+												"Fn::Join": [
+													"", [
+														"validation_client_name   '",
+														{
+															"Ref": "ChefValidator"
+														},
+														"'"
+													]
+												]
+											},
+											"validation_key       '/etc/chef/validator.pem'",
+											"enable_reporting     false",
+											"trusted_certs_dir    '/etc/chef/trusted_certs'",
+											"ssl_verify_mode      :verify_peer",
+											{
+												"Fn::Join": [
+													"", [
+														"chef_server_url '",
+														{
+															"Ref": "ChefServerURL"
+														},
+														"'"
+													]
+												]
+											}
+										]
+									]
+								}
+							},
+							"/etc/chef/run-chef-client.sh": {
+								"content": {
+									"Fn::Join": [
+										"\n", [
+											"logdate=`date +'%Y-%m-%d_%H.%M_%p'`",
+										{
+										"Fn::Join": [
+											"", [
+											"/usr/bin/chef-client -L /etc/chef/chef_run_$logdate.log -r role[",
+											{
+												"Ref": "ChefRole"
+											},
+											"]"
+													]
+												]
+											}
+										]
+									]
+								}
+							}
+						}
+					},
+						"3-chef": {
+						"commands": {
+							"0-chef-first-run": {
+								"command": {
+									"Fn::Join": [
+										"", [
+											"/usr/bin/chef-client -l info -L /etc/chef/first-run.log -r role[",
+											{
+												"Ref": "ChefRole"
+											},
+											"]"
+										]
+									]
+								},
+								"waitAfterCompletion": "0"
+						}
+					}
+				},
+					"4-elasticip": {
+						"commands": {
+							"0-associateeip": {
+								"command": {
+									"Fn::Join": [
+										"", [
+											"aws ec2 associate-address --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --allocation-id ",
+											{
+												"Ref": "EIPAllocationID"
+											},
+											" --region ",
+											{
+												"Ref":"Region"
+											}
+										]
+									]
+								},
+								"waitAfterCompletion": "0"
+						}
+					}
+				}
+			},
+	 	   "AWS::CloudFormation::Authentication": {
+	          "S3AccessCreds": {
+	            "type": "S3",
+	            "roleName": "ZabbixSecToRole",
+	            "buckets": ["S3Bucket"]
+	          }
+	        }
+	    },		   
+			"Properties": {
+				"ImageId": {
+					"Fn::GetAtt": ["AMIInfo", "Id"]
+				},
+				"BlockDeviceMappings": [{
+		            "DeviceName": "/dev/sda1",
+		            "Ebs" : {"VolumeSize": "100"}
+		        }],
+				"KeyName": {
+					"Ref": "KeyName"
+				},
+				"SecurityGroups": [
+					{"Ref": "InstanceSecurityGroup"},
+					{"Ref":"VpcSharedSecurityGroup"}
+				],
+				"InstanceType": {
+					"Ref": "InstanceType"
+				},
+				"IamInstanceProfile": {
+					"Ref": "ZabbixSecToInstanceProfile"
+				},
+				"AssociatePublicIpAddress": "true",				
+				
+				"UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+		        "#!/bin/bash -xe\n",
+		        "yum update -y aws-cfn-bootstrap\n",
+				"hostnamectl set-hostname ",
+				{"Ref": "Hostname"}, "\n",
+		        "/opt/aws/bin/cfn-init -v ",
+		        "         --stack ", { "Ref" : "AWS::StackName" },
+		        "         --resource LaunchConfig ",
+		        "         --region ", { "Ref" : "AWS::Region" }, "\n",
+
+		        "/opt/aws/bin/cfn-signal -e $? ",
+		        "         --stack ", { "Ref" : "AWS::StackName" },
+		        "         --resource LaunchConfig ",
+		        "         --region ", { "Ref" : "AWS::Region" }, "\n"
+		      ]]}}
+		      }
+		    },
+
+		"ZabbixASGroup": {
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"Properties": {
+				"AvailabilityZones": [{
+					"Ref": "AvailabilityZoneA"
+				},
+				{
+					"Ref": "AvailabilityZoneB"
+				}],
+				"LaunchConfigurationName": {
+					"Ref": "LaunchConfig"
+				},
+				"MinSize": {
+					"Ref": "InstanceCountMin"
+				},
+				"MaxSize": {
+					"Ref": "InstanceCountMax"
+				},
+				"DesiredCapacity": {
+					"Ref": "InstanceCountInitial"
+				},
+				"HealthCheckGracePeriod": {
+					"Fn::FindInMap": ["AWSRegionGrace", {
+						"Ref": "AWS::Region"
+					}, "grace"]
+				},
+				"HealthCheckType": "EC2",
+				"LoadBalancerNames": [{"Ref":"ZabbixElasticLoadBalancer"}],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Zabbix-ASGroup",
+					"PropagateAtLaunch": "true"
+				}],
+				"VPCZoneIdentifier": [{
+					"Ref": "PublicSubnetIDA"
+				},
+				{
+					"Ref": "PublicSubnetIDB"
+				}]
+			}
+		},
+		"AMIInfo": {
+			"Type": "Custom::AMIInfo",
+			"Properties": {
+				"ServiceToken": {
+					"Ref": "Lambda"
+				},
+				"Region": {
+					"Ref": "AWS::Region"
+				},
+				"Architecture": {
+					"Fn::FindInMap": ["AWSInstanceType2Arch", {
+						"Ref": "InstanceType"
+					}, "Arch"]
+				},
+				"Date": {
+					"Ref": "Date"
+				},
+				"AMIName": "zabbixserver-1*",
+				"AMIOwner": "436437695588"
+			}
+		}
+	},
+	"Outputs": {			
+		"AMIID": {
+			"Description": "The Amazon EC2 instance AMI ID.",
+			"Value": {
+				"Fn::GetAtt": ["AMIInfo", "Id"]
+			}
+		}
+	}
+}	

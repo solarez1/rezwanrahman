@@ -1,0 +1,9 @@
+{
+  
+    "q1":  "Were you able to execute the randomserver.ps1 script successfully?",
+    "q2":  "Were you able to mount the datastore?",
+    "q3":  "Did the files exist within the drive?",
+    "q4":  "Did you manage to clean up the environment?"
+
+    
+}

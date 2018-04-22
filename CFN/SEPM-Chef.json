@@ -1,0 +1,930 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+
+	"Description": "Create an Auto Healed SEPM server. This script creates an Auto Scaling Group with a simple health check of the SEPM server.",
+
+	"Parameters": {
+		"Lambda": {
+			"Type": "String",
+			"Default": "arn:aws:lambda:eu-west-1:436437695588:function:CustomAMILookup",
+			"Description": "The ARN of the lambda function from a supported region."
+		},
+		"VpcId" : {
+	      "Type" : "String",
+	      "Default" : "vpc-34c50651",
+	      "Description" : "VpcId of your existing Virtual Private Cloud (VPC)"
+	    },
+	     "ChefValidator":{
+	      "Description": "Name of the chef validator.",
+	      "Type": "String",
+	      "MinLength": "1",
+		  "Default" : "sdl-infrastructure-cfgmgmt-validator",
+	      "ConstraintDescription": "Must be a non empty string."
+	    },
+	    "PrivateSubnetID" : {
+	      "Type" : "String",
+	      "Default": "subnet-d55fac8c",
+	      "Description" : "The SubnetId for an existing Subnet in your Virtual Private Cloud (VPC)"
+	    },
+	    "PublicSubnetIDA" : {
+	      "Type" : "String",
+	      "Default": "subnet-cc5fac95",
+	      "Description" : "The SubnetId for an existing Subnet in your Virtual Private Cloud (VPC)"
+	    },
+	    "PublicSubnetIDB" : {
+	      "Type" : "String",
+	      "Default": "subnet-04a01161",
+	      "Description" : "The SubnetId for an existing Subnet in your Virtual Private Cloud (VPC)"
+	    },
+		"AvailabilityZone": {
+			"Type": "String",
+			"Default": "eu-west-1a",
+			"Description": "Name of the availability zone in which the servers will be created."
+		},
+		"Region":{
+			"Type": "String",
+			"Default": "eu-west-1",
+			"Description":"Provide the region of the s3 bucket containing the PEM file"
+		},		
+		"ModuleName": {
+			"Description": "The name of the JavaScript file",
+			"Type": "String",
+			"Default": "amilookup"
+		},
+		"ChefServerURL": {
+	      "Description": "URL of the Chef Server.",
+	      "Type": "String",
+	      "MinLength": "1",
+		  "Default": "https://api.chef.io/organizations/sdl-infrastructure-cfgmgmt",
+	      "ConstraintDescription": "Must be a non empty string."
+	    },
+		 "S3Bucket": {
+		  "Description": "Provide the S3 bucket which contains the Chef Validator key.",	      
+		  "Type": "String",
+		  "Default": "sepm-chefvalidator-dub",
+		  "ConstraintDescription": "Must be a non empty string."
+		},
+		"SSLCertArn": {
+			"Description": "ARN of the SSL certificate that will be deployed on ELB",
+			"Type": "String",
+			"Default": "arn:aws:acm:eu-west-1:436437695588:certificate/0a500698-e8c8-440b-aa4d-bf9ad3ca3e61",
+			"ConstraintDescription": "Must be a valid SSL ARN."
+		},
+		"InstanceType": {
+			"Description": "SEPM Server EC2 instance type",
+			"Type": "String",
+			"Default": "t2.medium",
+			"ConstraintDescription": "Must be a valid, EC2 instance type."
+		},
+		"InstanceCountMin": {
+			"Description": "Minimum number of EC2 instances in the auto scaling group.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"InstanceCountMax": {
+			"Description": "Maximum number of EC2 instances in the auto scaling group.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"InstanceCountInitial": {
+			"Description": "Desired (initial) number of EC2 instances in the auto scaling group.",
+			"Type": "Number",
+			"Default": "1"
+		},
+		"KeyName": {
+			"Type": "AWS::EC2::KeyPair::KeyName",
+			"MinLength": "1",
+			"MaxLength": "64",
+			"AllowedPattern": "[-_ a-zA-Z0-9]*",			
+			"Description": "The name of the key pair."
+		},
+		"Date": {
+			"Type": "String",
+			"Default": "2016//12//07",
+			"MinLength": "10",
+			"Description": "Todays date in format YYYY//MM//DD"
+		}
+	},
+	"Mappings": {
+		"AWSInstanceType2Arch": {
+			"t2.medium": {
+				"Arch": "HVM64"
+			  }		  
+	},
+	"AWSRegionGrace": {
+			"us-east-1": {
+				"grace": "6000"
+			},
+			"us-west-2": {
+				"grace": "6000"
+			},
+			"us-west-1": {
+				"grace": "6000"
+			},
+			"eu-west-1": {
+				"grace": "3000"
+			},
+			"ap-southeast-1": {
+				"grace": "6000"
+			},
+			"ap-southeast-2": {
+				"grace": "6000"
+			},
+			"ap-northeast-1": {
+				"grace": "6000"
+			},
+			"sa-east-1": {
+				"grace": "6000"
+			},
+			"eu-central-1": {
+				"grace": "6000"
+			}
+		}
+	},
+	"Resources": {
+	    "SEPMELBSecurityGroup": {
+        "Type": "AWS::EC2::SecurityGroup",
+	  	"Properties": {
+        "GroupDescription": "SEPM ELB Security Group",
+        "VpcId": { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [{
+            "IpProtocol" : "tcp",
+            "FromPort" : "443",
+            "ToPort" : "443",
+            "CidrIp" : "80.74.0.252/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "83.217.235.73/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "128.242.115.81/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "54.238.192.49/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "54.171.158.245/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "54.238.185.118/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "83.217.234.61/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "83.217.234.73/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "87.213.46.128/26"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "52.38.72.30/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "176.34.134.60/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "52.11.194.69/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "54.190.6.83/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "52.26.230.99/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "52.89.17.231/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "52.192.134.130/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "52.192.252.237/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "62.80.187.118/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "87.213.46.130/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "122.177.41.55/32"
+		},
+		{
+			"IpProtocol" : "tcp",
+			"FromPort" : "443",
+			"ToPort" : "443",
+			"CidrIp" : "54.148.40.149/32"
+		},
+		{
+			   "IpProtocol" : "tcp",
+			   "FromPort" : "443",
+			   "ToPort" : "443",
+			   "CidrIp" : "212.119.22.216/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "212.119.115.97/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.97/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.98/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.99/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.100/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.121/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.123/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.124/32"
+		},    
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "128.242.115.122/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "34.250.149.84/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "34.249.227.245/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "13.113.42.36/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "13.113.44.60/32"
+		},		
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "52.213.238.61/32"
+		},
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "52.214.26.79/32"
+		},		
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "198.107.132.250/32"
+		},		
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "54.154.7.98/32"
+		},		
+		{
+			  "IpProtocol" : "tcp",
+			  "FromPort" : "443",
+			  "ToPort" : "443",
+			  "CidrIp" : "54.191.205.65/32"
+		}
+		 ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "SEPMELBSecurityGroup"
+          }
+        ]
+      }
+    },
+    "SEPMELBSecurityGroup2": {
+		"Type": "AWS::EC2::SecurityGroup",
+		"Properties": {
+		    "GroupDescription": "SEPM ELB Security Group 2",
+		    "VpcId": { "Ref" : "VpcId" },
+		    "SecurityGroupIngress" : [{
+		        "IpProtocol" : "tcp",
+		        "FromPort" : "443",
+		        "ToPort" : "443",
+		        "CidrIp" : "54.68.23.18/32"
+			},
+			{
+				"IpProtocol" : "tcp",
+				"FromPort" : "443",
+				"ToPort" : "443",
+				"CidrIp" : "34.212.97.101/32"
+			},
+			{
+				  "IpProtocol" : "tcp",
+				  "FromPort" : "443",
+				  "ToPort" : "443",
+				  "CidrIp" : "34.209.184.39/32"
+			},
+			{
+				  "IpProtocol" : "tcp",
+				  "FromPort" : "443",
+				  "ToPort" : "443",
+				  "CidrIp" : "52.89.117.240/32"
+			},
+			{
+				  "IpProtocol" : "tcp",
+				  "FromPort" : "443",
+				  "ToPort" : "443",
+				  "CidrIp" : "35.167.151.249/32"
+			},
+			{
+				  "IpProtocol" : "tcp",
+				  "FromPort" : "443",
+				  "ToPort" : "443",
+				  "CidrIp" : "34.213.109.116/32"
+			},		
+			{
+				  "IpProtocol" : "tcp",
+				  "FromPort" : "443",
+				  "ToPort" : "443",
+				  "CidrIp" : "52.213.66.205/32"
+			},	
+			{
+				  "IpProtocol" : "tcp",
+				  "FromPort" : "443",
+				  "ToPort" : "443",
+				  "CidrIp" : "52.213.69.15/32"
+			}],
+			 "Tags": [{
+            "Key": "Name",
+            "Value": "SEPMELBSecurityGroup2"
+          }]
+      	}
+	   },
+    "SEPMElasticLoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "Listeners": [         
+  		  {
+              "LoadBalancerPort": "443",
+              "InstancePort": "8014",
+              "Protocol": "SSL",
+              "InstanceProtocol": "TCP",
+              "SSLCertificateId": { "Ref" : "SSLCertArn" }
+          }
+        ],
+        "HealthCheck": {
+            "Target": "TCP:80",
+            "HealthyThreshold": "3",
+            "UnhealthyThreshold": "5",
+            "Interval": "20",
+            "Timeout": "10"
+        },
+        "ConnectionDrainingPolicy": {
+            "Enabled": "true",
+            "Timeout": "300"
+        },
+        "CrossZone": true,
+        "SecurityGroups": [
+          { "Ref": "SEPMELBSecurityGroup" },
+          { "Ref": "SEPMELBSecurityGroup2" }
+        ],
+        "Subnets": [
+          {"Ref" : "PublicSubnetIDA"},
+          {"Ref" : "PublicSubnetIDB"}
+        ]
+      }
+    },
+	  "InstanceSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties" : {
+				"GroupDescription": "Security Group for the individual instances",
+				"VpcId": {
+					"Ref" : "VpcId"
+				},
+				"SecurityGroupIngress": [
+				{
+					"IpProtocol": "tcp",
+					"FromPort": "3389",
+					"ToPort": "3389",
+					"CidrIp": "10.202.100.0/24"
+				},
+				{
+					"IpProtocol": "tcp",
+					"FromPort": "443",
+					"ToPort": "443",
+					"SourceSecurityGroupId": { "Ref" : "SEPMELBSecurityGroup" }
+				},
+				{
+					"IpProtocol": "tcp",
+		            "FromPort": "8014",
+		            "ToPort": "8014",
+		            "SourceSecurityGroupId": { "Ref" : "SEPMELBSecurityGroup" }
+				},			
+				{
+					"IpProtocol": "tcp",
+					"FromPort": "3389",
+					"ToPort": "3389",
+					"CidrIp": "10.202.10.0/24"
+				}]
+			}
+		},	
+	    "SEPMRoute53" : {
+			"Type" : "AWS::Route53::RecordSet",
+			"Properties" : {
+				"HostedZoneName" : "ws-cloud.net.",
+				"Name" : "sepm.ws-cloud.net.",
+				"Type" : "CNAME",
+				"TTL" : "60",
+				"ResourceRecords" : [{ "Fn::GetAtt" : ["SEPMElasticLoadBalancer","DNSName"] }]
+			}
+		},
+		  "SEPMSecToRole": {
+	      "Type": "AWS::IAM::Role",
+	      "Properties": {
+	        "AssumeRolePolicyDocument": {
+	           "Version" : "2012-10-17",
+	           "Statement": [ {
+	              "Effect": "Allow",
+	              "Principal": {
+	                 "Service": [ "ec2.amazonaws.com" ]
+	              },
+	              "Action": [ "sts:AssumeRole" ]
+	           } ]
+	        },
+	        "ManagedPolicyArns": [ "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" ],
+	        "Path": "/",
+	        "Policies": [ {
+	          "PolicyName": "default-s3-bucket-policy",
+	          "PolicyDocument": {
+	            "Version": "2012-10-17",
+	            "Statement": [
+	              {
+	                "Effect": "Allow",
+	                "Action": [
+	                  "s3:Get*",
+	                  "s3:List*"
+	                ],
+	                "Resource": [
+	                  "arn:aws:s3:::sepm-*"
+	                ]
+	              }
+	            ]
+	          }
+	        },
+	        {
+          "PolicyName": "send-ssm-role-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "ssm:*"
+                ],
+                "Resource": [ "*" ]
+	              }
+	            ]
+	          }
+	        },
+	        {
+          "PolicyName": "allow-kms-role-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "kms:*"
+                ],
+                "Resource": [ "arn:aws:kms:eu-west-1:436437695588:key/daa1a81b-70f2-4434-8cfd-5795a1e40ff0" ]
+	              }
+	            ]
+	          }
+	        },	 
+	        {
+	      "PolicyName": "default-aws-logs-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:PutLogEvents",
+                  "logs:DescribeLogStreams"
+                ],
+                "Resource": [
+                  "arn:aws:logs:*:*:*"
+	                ]
+	              }
+	            ]
+	          }
+	      	},
+	      	{
+          "PolicyName": "ASGroup-policy",
+          "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "autoscaling:*"
+                ],
+                "Resource": [ "*" ]
+	              }
+	            ]
+	          }
+	        },	      	
+	      	{
+          "PolicyName": "put-cloudwatch-alarm-policy",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "cloudwatch:*"
+                ],
+                "Resource": [
+                  "*"
+                ]
+              }
+            ]
+          }
+        }   
+        ]
+      }
+    },
+	    "SEPMSecToInstanceProfile":{
+	      "Type": "AWS::IAM::InstanceProfile",
+	      "Properties": {
+	         "Path": "/",
+	         "Roles": [ { "Ref": "SEPMSecToRole" } ]
+	      }
+	    },	    
+		"LaunchConfig": {
+			"Type": "AWS::AutoScaling::LaunchConfiguration",
+			"Metadata" : {
+	        "Comment" : "Installs Chef from MSI, Installs the AWS CLI, Creates Pre-Requisite Chef Configuration Files & Perform Chef Initial Run",
+	        "AWS::CloudFormation::Init" : {
+	          "configSets" : {
+	            "default" : [ "1-install-awstools", "2-install-chef", "3-config-files", "4-download-files", "5-rename-computer", "6-chef-run"]
+          },
+           "1-install-awstools":{
+          	"packages":{
+				"msi":{
+					"aws-tools": "https://s3.amazonaws.com/aws-cli/AWSCLI64.msi"
+				}
+			}
+	      },
+	       "2-install-chef": {
+            "commands": {
+              "chef-install": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "powershell.exe -executionpolicy bypass -command . \"{ iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install\""
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "15"
+              }
+            }
+          },	      
+          "4-download-files":{
+            "commands": {
+              "download-files": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "\"C:\\Program Files\\Amazon\\AWSCLI\\aws.exe\"",
+                      " s3 sync s3://",
+                      {
+                        "Ref": "S3Bucket"
+                      },
+                      "/ C:\\chef\\",
+                       " --region ",
+                       {
+                       	"Ref":"Region"
+                       }
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "15"
+              }
+            }
+          },
+          "7-chef-prep": {
+            "commands": {
+              "chef-prep": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "powershell.exe -executionpolicy bypass -command \"remove-item c:\\chef\\client.pem\""
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "10"
+              }
+            }
+          },
+          "5-rename-computer": {
+            "commands": {
+              "rename-computer": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "powershell.exe -executionpolicy bypass -command \"Rename-Computer -NewName SEPMGMT01 -Force -Restart -PassThru\""
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": "5"
+              }
+            }
+          },                       
+          "6-chef-run" : {
+            "commands": {
+              "chef-first-run": {
+                "command": "C:\\opscode\\chef\\bin\\chef-client -l info -L C:\\chef\\first-run.log -r role[SEP_MANAGEMENT] --node-name SEPMGMT01",
+                "waitAfterCompletion": "5"
+              }
+            }
+          },          
+          "3-config-files":{
+			    "files" : {
+	              "\\chef\\client.rb": {
+	                "content": {
+	                  "Fn::Join": [
+	                  "\n",
+	                  [
+	                    "log_level          :info",
+	                    "log_location       STDOUT",
+	                    "client_key         '/chef/client.pem'",
+	                    {
+	                      "Fn::Join": [
+	                      "",
+	                        [
+	                          "validation_client_name   '",
+	                          { "Ref" : "ChefValidator" },
+	                          "'"
+	                        ]
+	                      ]
+	                    },
+	                    "validation_key       '/chef/sdl-infrastructure-cfgmgmt-validator.pem'",
+	                    "enable_reporting     false",
+	                    "trusted_certs_dir    '/chef/trusted_certs'",
+	                    "ssl_verify_mode      :verify_peer",
+	                    "node_name            'SEPMGMT01'",
+	                    "json_attribs  '/chef/attributes.json'",
+	                    {
+	                      "Fn::Join": [
+	                      "",
+	                        [
+	                          "chef_server_url '",
+	                          { "Ref" : "ChefServerURL" },
+	                          "'"
+	                        ]
+	                      ]
+	                    }
+	                  ]
+	                  ]
+	                }
+	              }	             
+		 	  	}
+		 	}	          
+	 	  },
+	 	   "AWS::CloudFormation::Authentication": {
+	          "S3AccessCreds": {
+	            "type": "S3",
+	            "roleName": "SEPMSecToRole",
+	            "buckets": ["S3Bucket"]
+	          }
+	        }
+	    },		   
+			"Properties": {
+				"ImageId": {
+					"Fn::GetAtt": ["AMIInfo", "Id"]
+				},
+				"BlockDeviceMappings": [{
+		            "DeviceName": "/dev/sda1",
+		            "Ebs" : {"VolumeSize": "100"}
+		        }],
+				"KeyName": {
+					"Ref": "KeyName"
+				},
+				"SecurityGroups": [{
+					"Ref": "InstanceSecurityGroup"
+				}],
+				"InstanceType": {
+					"Ref": "InstanceType"
+				},
+				"IamInstanceProfile": {
+					"Ref": "SEPMSecToInstanceProfile"
+				},
+				"AssociatePublicIpAddress": "false",				
+				
+				"UserData": {
+		          "Fn::Base64": {
+		            "Fn::Join": [
+		              "\n",
+		              [
+		                "<script>",
+		                "msiexec /a \"https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-win64-latest.msi\"",		                
+		                {
+		                  "Fn::Join": [
+		                    "",
+		                    [
+		                      "cfn-init.exe -v -s ",
+		                      { "Ref": "AWS::StackId" },
+		                      " -r LaunchConfig --region ",
+		                      { "Ref": "AWS::Region" }
+		                    ]
+		                  ]
+		                },
+		                {
+		                  "Fn::Join": [
+		                    "",
+		                    [
+		                      "cfn-signal.exe ",
+		                      { "Ref": "AWS::StackId" },
+		                      " -r LaunchConfig --region ",
+		                      { "Ref": "AWS::Region" }
+		                    ]
+		                  ]
+		                },
+
+		                "</script>"
+		              ]
+		            ]
+		         }
+		      }
+			}
+		}, 
+
+		"SEPMGroup": {
+			"Type": "AWS::AutoScaling::AutoScalingGroup",
+			"Properties": {
+				"AvailabilityZones": [{
+					"Ref": "AvailabilityZone"
+				}],
+				"LaunchConfigurationName": {
+					"Ref": "LaunchConfig"
+				},
+				"MinSize": {
+					"Ref": "InstanceCountMin"
+				},
+				"MaxSize": {
+					"Ref": "InstanceCountMax"
+				},
+				"DesiredCapacity": {
+					"Ref": "InstanceCountInitial"
+				},
+				"HealthCheckGracePeriod": {
+					"Fn::FindInMap": ["AWSRegionGrace", {
+						"Ref": "AWS::Region"
+					}, "grace"]
+				},
+				"HealthCheckType": "EC2",
+				"LoadBalancerNames": [{"Ref":"SEPMElasticLoadBalancer"}],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "SEPM-ASGroup",
+					"PropagateAtLaunch": "true"
+				}],
+				"VPCZoneIdentifier": [{
+					"Ref": "PrivateSubnetID"
+				}]
+			}
+		},	
+
+		"AMIInfo": {
+			"Type": "Custom::AMIInfo",
+			"Properties": {
+				"ServiceToken": {
+					"Ref": "Lambda"
+				},
+				"Region": {
+					"Ref": "AWS::Region"
+				},
+				"Architecture": {
+					"Fn::FindInMap": ["AWSInstanceType2Arch", {
+						"Ref": "InstanceType"
+					}, "Arch"]
+				},
+				"Date": {
+					"Ref": "Date"
+				},
+				"AMIName": "Windows_Server-2012-R2_RTM-English-64Bit-Base*",
+				"AMIOwner": "801119661308"
+			}
+		}
+	},
+	"Outputs": {			
+		"AMIID": {
+			"Description": "The Amazon EC2 instance AMI ID.",
+			"Value": {
+				"Fn::GetAtt": ["AMIInfo", "Id"]
+			}
+		}
+	}
+}	
