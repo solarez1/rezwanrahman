@@ -272,62 +272,6 @@
 			"Description" : "Whitelist dubzabproxy01 EIP"
 		},
 		{
-			"IpProtocol" : "tcp",
-			"FromPort" : "10051",
-			"ToPort" : "10051",
-			"CidrIp" : "35.156.202.78/32",
-			"Description" : "Whitelist frazabproxy01 EIP"
-		},
-		{
-			"IpProtocol" : "tcp",
-			"FromPort" : "10051",
-			"ToPort" : "10051",
-			"CidrIp" : "34.211.163.226/32",
-			"Description" : "Whitelist orgzabproxy01 EIP"
-		},
-		{
-			"IpProtocol" : "tcp",
-			"FromPort" : "10051",
-			"ToPort" : "10051",
-			"CidrIp" : "52.199.75.240/32",
-			"Description" : "Whitelist tkozabproxy01 EIP"
-		},
-		{
-			"IpProtocol" : "tcp",
-			"FromPort" : "10051",
-			"ToPort" : "10051",
-			"CidrIp" : "10.202.4.70/23",
-			"Description" : "Whitelist snjzabproxyc01 cluster vip"
-		},
-		{
-			"IpProtocol" : "tcp",
-			"FromPort" : "10051",
-			"ToPort" : "10051",
-			"CidrIp" : "10.202.40.40/23",
-			"Description" : "Whitelist slgzabproxyc01 cluster vip"
-		},
-		{
-		  	"IpProtocol" : "tcp",
-		  	"FromPort" : "10051",
-		  	"ToPort" : "10051",			  
-		  	"SourceSecurityGroupId": { "Ref" : "RDSSecurityGroup1" },
-		  	"Description" : "Whitelist for RDS"
-		},
-		{
-		  	"IpProtocol" : "tcp",
-		  	"FromPort" : "10051",
-		  	"ToPort" : "10051",			  
-		  	"SourceSecurityGroupId": { "Ref" : "RDSSecurityGroup2" },
-		  	"Description" : "Whitelist for RDS"
-		},
-		{
-			"IpProtocol": "tcp",
-			"FromPort": "80",
-			"ToPort": "80",
-			"SourceSecurityGroupId": { "Ref" : "ZabbixELBSecurityGroup" },
-			"Description" : "Whitelist for ELB"
-		},
-		{
 			"IpProtocol": "tcp",
 			"FromPort": "22",
 			"ToPort": "22",
