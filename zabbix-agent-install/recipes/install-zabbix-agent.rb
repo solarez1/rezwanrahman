@@ -1,11 +1,7 @@
 #
 # Cookbook Name:: zabbix-agent-install
 # Recipe:: default
-#
-# Copyright 2018, SDL Plc
-#
-#Stuart Caine (scaine@sdl.com):v1.0.0
-#
+
 #zabbix agent install
 #
 # All rights reserved - Do Not Redistribute
