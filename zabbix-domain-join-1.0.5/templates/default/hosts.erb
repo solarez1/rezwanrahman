@@ -1,0 +1,8 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+# Manually Maintain Key DNS Records, As Instance Cannot Resolve SDLPRODUCTS AD DNS
+<%= @aws['ipaddress'] %> <%= @aws['fqdn'] %> <%= @aws['fqdn'] %>
+
+<%= (@aws['ad_servers_map'])[@aws['region']][:primary_dc_ip] %> <%= (@aws['ad_servers_map'])[@aws['region']][:primary_dc_name] %> <%= ((@aws['ad_servers_map'])[@aws['region']][:primary_dc_name]) + '.' + @aws['ad_domain'] %> 
+<%= (@aws['ad_servers_map'])[@aws['region']][:primary_dc_ip] %> _ldap._tcp.sdlproducts.com sdlproducts.com sdlproducts

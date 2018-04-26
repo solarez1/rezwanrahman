@@ -1,0 +1,24 @@
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ default_realm = <%= (@aws['ad_domain']).upcase %>
+ dns_lookup_realm = false
+ dns_lookup_kdc = true
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+
+[realms]
+ <%= (@aws['ad_domain']).upcase %> = {	
+	kdc = <%= ((@aws['ad_servers_map'])[@aws['region']][:primary_dc_name]) + '.' + @aws['ad_domain'] %>
+	admin_server = <%= ((@aws['ad_servers_map'])[@aws['region']][:primary_dc_name]) + '.' + @aws['ad_domain'] %>
+ }
+
+[domain_realm]
+ .<%= (@aws['ad_domain']).downcase %> = <%= (@aws['ad_domain']).upcase %>
+ <%= (@aws['ad_domain']).downcase %> = <%= (@aws['ad_domain']).upcase %>
+ 
+ 

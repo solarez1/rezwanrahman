@@ -1,0 +1,51 @@
+[sssd]
+config_file_version = 2
+services = nss, pam
+# SSSD will not start if you do not configure any domains.
+# Add new domain configurations as [domain/<NAME>] sections, and
+# then add the list of domains (in the order you want them to be
+# queried) to the "domains" attribute below and uncomment it.
+domains = cptpoc.com
+
+[nss]
+
+[pam]
+
+# An example Active Directory domain. Please note that this configuration
+# works for AD 2003R2 and AD 2008, because they use pretty much RFC2307bis
+# compliant attribute names. To support UNIX clients with AD 2003 or older,
+# you must install Microsoft Services For Unix and map LDAP attributes onto
+# msSFU30* attribute names.
+[domain/<%= ((@aws['ad_domain']).upcase).split('.')[0]%>]
+id_provider = ad
+auth_provider = ad
+chpass_provider = ad
+access_provider = ad
+ldap_uri = ldap://<%= ((@aws['ad_servers_map'])[@aws['region']][:primary_dc_name]) + '.' + @aws['ad_domain'] %>
+ldap_search_base = dc=cptpoc,dc=com
+ldap_schema = ad
+; ldap_sasl_mech = GSSAPI
+ldap_user_object_class = user
+ldap_group_object_class = group
+; ldap_user_principal = userPrincipalName
+ldap_account_expire_policy = ad
+ldap_force_upper_case_realm = true
+dyndns_update = true
+dyndns_refresh_interval = 43200
+dyndns_update_ptr = true
+dyndns_ttl = 3600
+override_homedir = /home/<%= (@aws['ad_domain']).upcase %>/%U
+ad_maximum_machine_account_password_age = 30
+krb5_server = <%= ((@aws['ad_servers_map'])[@aws['region']][:primary_dc_name]) + '.' + @aws['ad_domain'] %>
+krb5_realm = <%= (@aws['ad_domain']).upcase %>
+ad_domain = <%= @aws['ad_domain'] %>
+krb5_realm = <%= (@aws['ad_domain']).upcase %>
+realmd_tags = manages-system joined-with-samba 
+cache_credentials = True
+id_provider = ad
+krb5_store_password_if_offline = True
+default_shell = /bin/bash
+ldap_id_mapping = True
+use_fully_qualified_names = True
+fallback_homedir = /home/%u@%d
+access_provider = ad
