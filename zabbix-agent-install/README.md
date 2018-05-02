@@ -42,4 +42,4 @@ include zabbix-agent-deploy in the runlist
 
 ## License and Authors
 
-v1.0.0 - Stuart Caine - February 2018
+v1.0.0 - Rezwan Rahman - February 2018
