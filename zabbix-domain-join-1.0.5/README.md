@@ -1,4 +1,4 @@
-zabibx-domain-join Cookbook
+zabbix-domain-join Cookbook
 =====================
 Performs Domain Configuration For All SDL Zabbix Servers
 
