@@ -60,4 +60,4 @@ License and Authors
 -------------------
 Authors:
 
--Stuart Caine (scaine@sdl.com) - Senior Engineer
+- Rezwan Rahman
