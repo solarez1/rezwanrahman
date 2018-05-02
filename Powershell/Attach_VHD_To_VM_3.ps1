@@ -1,0 +1,1 @@
+Add-VMHardDiskDrive -VMName RezMachine -path "C:\Powershell_scripts\RezMachine\VirtualMachines\Test.vhdx"

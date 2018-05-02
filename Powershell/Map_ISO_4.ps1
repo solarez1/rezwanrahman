@@ -1,0 +1,1 @@
+Set-VMDvdDrive -VMName RezMachine -ControllerNumber 1 -path 'C:\Software\Server 2008R2\WS08R2_ENU_x64_STD.iso'

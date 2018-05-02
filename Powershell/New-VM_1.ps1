@@ -1,0 +1,1 @@
+New-VM -Name RezMachine -path C:\Powershell_scripts -MemoryStartupBytes 512MB

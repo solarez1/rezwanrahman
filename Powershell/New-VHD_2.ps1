@@ -1,0 +1,1 @@
+New-VHD -Path C:\Powershell_scripts\RezMachine\Virtual`Machines\Rez.vhdx -SizeBytes 10GB -Dynamic
