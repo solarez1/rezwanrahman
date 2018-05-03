@@ -1,0 +1,420 @@
+﻿<!DOCTYPE html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>SDL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--[if mso]>
+        <style> body,table tr,table td,a, span,table.MsoNormalTable {  font-family: 'Calibri', Arial, sans-serif !important;  }</style>
+        <![endif]-->
+        <style type="text/css">
+           ReadMsgBody{ width: 100%;}
+            .ExternalClass {width: 100%;}
+            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;}
+            body {-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;margin:0 !important; padding:0 !important;}
+            p { margin: 1em 0; font-family: 'Calibri', Arial, sans-serif; font-weight: normal; font-size: 14px; line-height:18px;}
+            table td { border-collapse: collapse; font-family: 'Calibri', Arial, serif;}
+            table td { font-family: 'Calibri', Arial, sans-serif; font-weight: normal; font-size: 14px; line-height:18px; color:#414141; }
+            table td font { color: #414141; font-family: 'Calibri', Arial, sans-serif; font-size:14px; }
+            table td a { color: #414141; text-decoration: underline;}
+            table td .little { font-size: 11px; line-height:14px; }
+            table td.big, table td .big { font-size: 25px; line-height: 25px; font-weight: normal; color:#25bd59; }
+            table td .nobr { white-space: nowrap;}
+            img {outline:0;} 
+            a img {border:none;}
+            @-ms-viewport{ width: device-width; }
+            html,body,td,font,a { -webkit-tap-highlight-color: rgba(255, 255, 255, 1); }
+            .appleLinksWhite a { color: #fff !important; text-decoration: none !important; }
+			
+            @media only screen and (min-width:200px) {
+                #gmail_fullview { display: none; }
+            }
+            @media only screen and (max-width: 599px) {
+                body[yahoo] .container { width:100% !important; max-width: 100% !important; min-width: 100% !important; }
+                body[yahoo] .container > tr > td, body[yahoo] .container tbody > tr > td { max-width: 100% !important;}
+                body[yahoo] .content-padding{ padding: 0 15px; }
+                body[yahoo] .logo { display:block !important; padding:0 !important; }
+                body[yahoo] .photo img { width:100% !important; height:auto !important;}
+                body[yahoo] .responsive-hidden { display:none !important; }
+				body[yahoo] .mobile-center { text-align: center !important;}
+				body[yahoo] .mobile-unfloat {float: none !important;}
+                body[yahoo] .mobile-container { width:100% !important; }
+                body[yahoo] .mobile-hidden { display:none !important; }
+                body[yahoo] img { max-width:100% !important; height:auto !important; max-height:auto !important;}
+                body[yahoo] .header img { width:auto !important; max-width:316px !important; height:auto !important; max-height:auto !important;}
+                body[yahoo] .photo img { width:100% !important; max-width:100% !important; height:auto !important;}
+                body[yahoo] .drop { display:block !important; width: 100% !important; float:left; clear:both;}
+                body[yahoo] .content-center { min-width: 264px;}
+				body[yahoo] .mobile-images-hidden img { display: none !important; max-height: 0 !important; }
+				body[yahoo] [class~=mobile-images-hidden] img { display: none !important; max-height: 0 !important;} 
+				body[yahoo] .mobile-images-show img { display: block !important; max-height: none !important; }
+            }
+        </style>
+    </head>
+    <body bgcolor="#f2f2f3" style="color: #414141; margin: 0px; padding:0px; -webkit-text-size-adjust:none;" yahoo="fix">
+        <center>
+            <table class="container" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#f2f2f3">
+                <tbody>
+                    <!-- Browser View -->
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="10" cellspacing="0">
+                                <tr>
+                                    <td align="center">
+										<font class="little" face="Calibri" size="1" color="#5d6e7f" style="font-family: 'Calibri', Arial, sans-serif; font-size: 11px;">
+											<span id="ViewOnWeb"  >
+                                                &nbsp;</a>
+                                            </span>
+                                        </font>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top">
+                            <table class="container" width="600" border="0" cellpadding="0" cellspacing="0" bgcolor="white">
+                                <tbody>
+                                    <tr>
+                                        <td height="15"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                    </tr>
+                                    <!-- Header -->
+                                    <tr>
+                                        <td align="center">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="600" class="responsive-hidden">
+                                                <tr>
+                                                    <td height="14"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                </tr>
+                                            </table>
+                                            
+                                            <!--[if mso]>
+                                            <table border="0" cellpadding="0" cellspacing="0" width="600">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="drop" width="29" height="1"><![endif]-->    
+                                            <table border="0" cellpadding="0" cellspacing="0" align="left" width="29">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                            <td class="drop" width="61" align="center"><![endif]-->
+                                            <table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="61">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="center">
+															<div id="HeaderLogo"  >
+																<a href="http://www.sdl.com/"><img src="http://info.sdl.com/rs/689-LLU-525/images/sdl_logo_2016.jpg" width="61" height="34" style="display:block;" border="0" alt="" /></a>
+															</div>
+														</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                            <td class="drop" width="128" align="center"><![endif]-->
+                                            <table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="128">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                            <td class="drop" width="353" align="center"><![endif]-->
+                                            <table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="353">
+                                                <tbody>
+                                                    <tr>
+                                                        <td valign="middle" height="34" align="right" class="mobile-center">
+															<font face="Calibri" style="font-family: 'Calibri', Arial, sans-serif; font-size: 12px; line-height: 15px;" size="1">
+																<span id="ToolbarLinks"  >
+                                                                <a href="https://gateway.sdl.com/SecureTranslationLoginHelp" style="color:#25bd59; text-decoration:none;">CONTACT US</a></span>
+                                                            </font>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                            <td class="drop" width="29" align="center"><![endif]-->
+                                            <table border="0" cellpadding="0" cellspacing="0" align="left" width="29">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table><![endif]-->
+                                            
+                                            <table border="0" cellpadding="0" cellspacing="0" width="600" class="responsive-hidden">
+                                                <tr>
+                                                    <td height="9"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="15"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                    </tr>
+                                    
+                                    <!-- Banner -->
+                                    <tr>
+                                        <td align="center">
+                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="photo">
+                                                            <div id="Banner"  >
+                                                                <img src="https://info.sdl.com/rs/689-LLU-525/images/munich-header-corp.png" alt="" border="0" style="display:block;" />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="12"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                    </tr>
+                                    
+                                    <!-- Content Area -->
+                                    <tr>
+                                        <td align="center">
+                                            <!--[if mso]>
+                                            <table border="0" cellpadding="0" cellspacing="0" width="600">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="drop" width="29" height="1"><![endif]-->    
+                                            <table border="0" cellpadding="0" cellspacing="0" align="left" width="29">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                            <td class="drop" width="541" align="center"><![endif]-->
+                                            <table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="541">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="left" valign="top" class="content-padding">
+															<p><font face="Calibri" color="#25bd59" style="font-family: 'Calibri', Arial, sans-serif; font-size: 25px; line-height: 25px; font-weight: normal; color:#25bd59;">
+															<span id="BodyTitle"  >Welcome to the Munich Re Secure Translation Environment Enrolment Process</span>
+															</font></p>
+															
+															<div id="BodyContent" class="mktEditable mobile-images-hidden">
+																
+																<p><font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#414141;">
+																	Dear #Name,<br />
+																	<br />
+
+															  Please follow the steps below to setup your password to login to the Virtual Desktop Infrastructure (VDI) and registration process for the two-factor authentication service with Duo Security which is required to login to the VDI.</font></p>
+																<p><font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#25bd59;">Step 1: Create your login password</font></p><font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#414141;"><ul><li>Your Username is: #Username</li>
+																  <li>To reset your password <a href="https://mrutil.sdlproducts.com/forgetPassword.html" style="text-decoration:none; color:#298fc2; font-weight:bold;">click here</a>.</li>
+																  <li>Enter the Username above in the provided box and click on'Reset'.</li>
+																  <li>You will then receive a separate email with instructions to set your password.
+															    </li>
+																</ul>
+																</font></p>
+																<font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#25bd59;">Step 2: Register for the Two-Factor Authentication through Duo Security Solution</font>
+																<ul>
+																  <li>To register a phone, tablet or other device for Two-Factor Authentication <a href="https://api-806d2c31.duosecurity.com/portal?code=65d36fcbb4642328&akey=DADI6HX47ADDGT3B95C4" style="text-decoration:none; color:#298fc2; font-weight:bold;">click here</a>.</li>
+																  <li><font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#414141;">To learn more about Duo authentication, visit the online guide <a href="https://guide.duo.com/enrollment" style="text-decoration:none; color:#298fc2; font-weight:bold;">here</a>.</font></li>
+																</ul>
+																</p>
+																<font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#25bd59;">Step 3: Logging into the VDI solution</font>
+																<ul>
+																  <li>Go to the Secure Translation home page <a href="https://www.sdl.com/secure-translation-supply-chain/" style="text-decoration:none; color:#298fc2; font-weight:bold;">here</a>.</li>
+																  <li>Now click on the 'Login Here' button to begin the login process for the VDI.</li>
+															    </ul>
+																<p><font color="#414141" style="font-family: 'Calibri', Arial, sans-serif; font-size: 14px; line-height:18px; font-weight: normal; color:#414141;">If you have any issues with the login process or with setting up your account please contact the SDL Support by <a href="https://gateway.sdl.com/SecureTranslationLoginHelp" style="text-decoration:none; color:#298fc2; font-weight:bold;">clicking here</a>.<br />
+																  <br />
+															  Kind Regards<br />
+															  SDL Cloud Operations
+																</font>
+																  </p>
+																  
+																  
+																  
+																 
+															  </p>
+													      </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                            <td class="drop" width="30" align="center"><![endif]-->
+                                            <table border="0" cellpadding="0" cellspacing="0" align="left" width="30">
+                                                <tbody>
+                                                    <tr>
+                                                        <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!--[if mso]></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table><![endif]-->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="60"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table border="0" cellpadding="0" cellspacing="0" width="600" class="container">
+                                                <tr>
+                                                    <td align="center">
+                                                        <!--[if mso]>
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="drop" width="23" height="1"><![endif]--> 
+                                                        <table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="23">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                       <!--[if mso]></td>
+														<td class="drop" width="483" align="center"><![endif]-->
+														<table class="container" border="0" cellpadding="0" cellspacing="0" width="483" align="left">
+															<tr>
+																<td align="center">
+																	<div id="SocialLinks"  >
+																		<!--[if mso]>
+																		<table border="0" cellpadding="0" cellspacing="0" width="483" align="left">
+																			<tbody>
+																				<tr>
+																					<td><![endif]--> 
+																		<table border="0" cellpadding="0" cellspacing="0" style="float:left;" class="mobile-unfloat">
+																			<tr>
+																				<td><a href="https://twitter.com/SDL" target="_blank"><img src="http://info.sdl.com/rs/689-LLU-525/images/soc_tw_lg.jpg" alt="" border="0" width="34" height="32" style="display:block;" /></a></td>
+																				<td width="21"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+																				<td><a href="https://www.facebook.com/sdlplc" target="_blank"><img src="http://info.sdl.com/rs/689-LLU-525/images/soc_fb_lg.jpg" alt="" border="0" width="34" height="32" style="display:block;" /></a></td>
+																				<td width="21"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+																				<td><a href="https://www.youtube.com/user/SDLonline" target="_blank"><img src="http://info.sdl.com/rs/689-LLU-525/images/soc_yt_lg.jpg" alt="" border="0" width="34" height="32" style="display:block;" /></a></td>
+																				<td width="21"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+																				<td><a href="https://uk.linkedin.com/company/sdlplc" target="_blank"><img src="http://info.sdl.com/rs/689-LLU-525/images/soc_li_lg.jpg" alt="" border="0" width="34" height="32" style="display:block;" /></a></td>
+																			</tr>
+																		</table>
+																		<!--[if mso]></td>
+																				</tr>
+																			</tbody>
+																		</table><![endif]-->
+																	</div>
+																</td>
+															</tr>
+														</table>
+														<!--[if mso]></td>
+														<td class="drop" width="17" align="center"><![endif]-->
+														<table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="17">
+															<tbody>
+																<tr>
+																	<td height="10"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+																</tr>
+															</tbody>
+														</table>
+                                                        <!--[if mso]></td>
+                                                        <td class="drop" width="66" align="center"><![endif]-->
+                                                        <table class="container" border="0" cellpadding="0" cellspacing="0" align="left" width="66">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td align="center">
+																		<font face="Calibri" size="3" style="font-family: 'Calibri', Arial, sans-serif; font-size:18px;">
+																			<span id="SdlLink"  >
+																				<a href="http://sdl.com" target="_blank" style="color:#5d6e7f; text-decoration:none;">sdl.com</a>
+																			</span>
+																		</font>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!--[if mso]></td>
+                                                        <td class="drop" width="11" align="center"><![endif]-->
+                                                        <table border="0" cellpadding="0" cellspacing="0" align="left" width="11">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!--[if mso]></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table><![endif]-->
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="20"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" class="container" width="600">
+                                <tr>
+                                    <td height="13"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-padding">
+										<!--[if mso]>
+										<table border="0" cellpadding="0" cellspacing="0" width="600">
+											<tbody>
+												<tr>
+													<td class="drop" width="30" height="1"><![endif]-->    
+										<table border="0" cellpadding="0" cellspacing="0" align="left" width="30">
+											<tbody>
+												<tr>
+													<td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+												</tr>
+											</tbody>
+										</table>
+										<!--[if mso]></td>
+										<td class="drop" width="540" align="center"><![endif]-->
+										<table border="0" align="left" cellpadding="0" cellspacing="0" class="container">
+											<tr>
+												<td class="content-padding">
+													<font class="little" face="Calibri" style="font-family: 'Calibri', Arial, sans-serif; font-size: 10px;" color="#414141" size="0">
+													<span id="Footer"  >
+															&copy; 2018 SDL PLC All rights reserved. The SDL name and Logo, and SDL product and service names are trademarks of SDL plc and/or its subsidiaries, some of which may be registered. Other company, product or service names are the property of their respective holders. <a href="https://gateway.sdl.com/SecureTranslationLoginHelp" style="color:#414141;">Contact Us</a>.<br />
+														SDL PLC. New Globe House, Vanwall Road, Vanwall Business Park, Maidenhead, Berkshire, SL6 4UB.</span>
+													</font>
+												</td>
+											</tr>
+										</table>
+										<!--[if mso]></td>
+										<td class="drop" width="30" align="center"><![endif]-->
+										<table border="0" cellpadding="0" cellspacing="0" align="left" width="30">
+											<tbody>
+												<tr>
+													<td><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+												</tr>
+											</tbody>
+										</table>
+										<!--[if mso]></td>
+												</tr>
+											</tbody>
+										</table><![endif]-->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="20"><img src="http://info.sdl.com/rs/689-LLU-525/images/_spacer.gif" width="1" height="1" alt="" border="0" align="left" /></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+    </body>
+</html>
