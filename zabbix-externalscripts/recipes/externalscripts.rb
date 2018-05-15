@@ -3,7 +3,7 @@
 # Recipe:: externalscripts.rb
 #
 # Copyright 2018, SDL International Plc
-# Author: Stuart Caine
+# Author: Rezwan Rahman
 #
 # All rights reserved - Do Not Redistribute
 #
