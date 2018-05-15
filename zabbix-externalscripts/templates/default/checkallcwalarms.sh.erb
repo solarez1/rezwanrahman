@@ -1,0 +1,6 @@
+#!/bin/sh
+cd /etc/zabbix/externalscripts/
+state=$1
+accountid=$2
+export AWS_CONFIG_FILE=/etc/zabbix/.aws/config
+python -c "from cwalarms import checkallcwalarms; checkallcwalarms('$state', '$accountid')"

@@ -1,0 +1,104 @@
+
+import boto3
+import sys
+
+
+def checkcwalarm(getalarm, state, accountid):
+
+#you can reference the account id in the bash script and pass it as an argument to the python functions
+
+   #accounts = [152462436113,child-account-2,child-account-3]
+
+   #for account in accounts:
+
+        client = boto3.client('sts')
+        response = client.assume_role(
+        DurationSeconds=3600,
+        RoleArn='arn:aws:iam::'+ str(accountid) + ':role/CloudOperationsGlobalCrossAccountZABBIX',
+        RoleSessionName='assumeaccountrole',
+        )
+        
+        client = boto3.client('cloudwatch',
+        aws_access_key_id=response['Credentials']['AccessKeyId'],
+        aws_secret_access_key=response['Credentials']['SecretAccessKey'],
+        aws_session_token=response['Credentials']['SessionToken'])
+        response = client.describe_alarms(
+            AlarmNames=[
+                getalarm,
+            ],
+            StateValue=state,
+            MaxRecords=100
+        )
+        alarm = 0
+        try:
+            alarms = response['MetricAlarms'][0]['AlarmName']
+            for a in alarms:
+                alarm = 1
+        except IndexError:
+            pass
+        print(alarm)
+
+
+def checkallcwalarms(state, accountid):
+      
+   #accounts = [152462436113,child-account-2,child-account-3]
+
+   #for account in accounts:
+
+        client = boto3.client('sts')
+        response = client.assume_role(
+        DurationSeconds=3600,
+        RoleArn='arn:aws:iam::'+ str(accountid) + ':role/CloudOperationsGlobalCrossAccountZABBIX',
+        RoleSessionName='assumeaccountrole',
+        )
+        
+        client = boto3.client('cloudwatch',
+        aws_access_key_id=response['Credentials']['AccessKeyId'],
+        aws_secret_access_key=response['Credentials']['SecretAccessKey'],
+        aws_session_token=response['Credentials']['SessionToken'])
+        response = client.describe_alarms(
+            StateValue=state,
+            MaxRecords=100
+        )
+        alarmcount = 0
+        try:
+            alarms = response['MetricAlarms']
+            for a in alarms:
+                alarmcount+= 1
+        except IndexError:
+            pass
+        print(alarmcount)
+
+
+def checkprefixcwalarms(prefix, state, accountid):
+
+   #accounts = [152462436113,child-account-2,child-account-3]
+
+   #for account in accounts:
+
+        client = boto3.client('sts')
+        response = client.assume_role(
+        DurationSeconds=3600,
+        RoleArn='arn:aws:iam::'+ str(accountid) + ':role/CloudOperationsGlobalCrossAccountZABBIX',
+        RoleSessionName='assumeaccountrole',
+        )
+        
+        client = boto3.client('cloudwatch',
+        aws_access_key_id=response['Credentials']['AccessKeyId'],
+        aws_secret_access_key=response['Credentials']['SecretAccessKey'],
+        aws_session_token=response['Credentials']['SessionToken'])
+
+        response = client.describe_alarms(
+            AlarmNamePrefix=prefix,
+            StateValue=state,
+            MaxRecords=100
+        )
+        alarmcount = 0
+        try:
+            alarms = response['MetricAlarms']
+            for a in alarms:
+                alarmcount+= 1
+        except IndexError:
+            pass
+        print(alarmcount)
+
