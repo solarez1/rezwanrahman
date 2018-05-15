@@ -37,6 +37,6 @@ License and Authors
 -------------------
 Authors:
 
-Stuart Caine - Senior Engineer : January 2018
+Rezwan Rahman - Senior Engineer : January 2018
 
 All rights reserved SDL International Plc 2018
