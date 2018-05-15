@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "cms400", "\\w2k12\c$\inetpub\wwwroot\cms400\", "{AC72EF32-7609-412C-AE6E-B7E54E48087C}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/cms400"
+		Debug.AspNetCompiler.PhysicalPath = "\\w2k12\c$\inetpub\wwwroot\cms400\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\cms400\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/cms400"
+		Release.AspNetCompiler.PhysicalPath = "\\w2k12\c$\inetpub\wwwroot\cms400\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\cms400\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "1120"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC72EF32-7609-412C-AE6E-B7E54E48087C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC72EF32-7609-412C-AE6E-B7E54E48087C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
