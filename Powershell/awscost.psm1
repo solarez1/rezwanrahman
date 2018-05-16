@@ -43,7 +43,7 @@ Write-Warning "$_"
 $mail = @{
 From = $EmailFrom;
 To = $EmailTo;
-SmtpServer = 'smtp.sdlproducts.com';
+SmtpServer = 'smtp.test.com';
 Subject = "AWS billing report could not be found";
 Body = "Please check s3 bucket eu-awscost-report in CloudOperationsGlobal for the latest cost report in .csv format";
 Priority = "High"
@@ -61,7 +61,7 @@ Write-Warning "There is no file in the location specified! Please check $sourcef
 $mail = @{
 From = $EmailFrom;
 To = $EmailTo;
-SmtpServer = 'smtp.sdlproducts.com';
+SmtpServer = 'smtp.test.com';
 Subject = "AWS billing report could not be found";
 Body = "Please check if $sourcefolder exists on server";
 Priority = "High"
@@ -102,7 +102,7 @@ if($count -gt 0){
     $mail = @{
     From = $EmailFrom;
     To = $EmailTo;
-    SmtpServer = 'smtp.sdlproducts.com';
+    SmtpServer = 'smtp.test.com';
     Subject = "Issue with SN creation";
     Body = "Please check if the service now incident to aws cost report has been created, please check jenkins job history for details";
     Priority = "High"
