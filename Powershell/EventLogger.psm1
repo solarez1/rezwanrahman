@@ -45,7 +45,9 @@ param(
 [string]$message,
 [ValidateNotNullOrEmpty()]
 [string]$eventid=10000,
+[Parameter(DontShow)]
 [string]$apitoken = 'default',
+[Parameter(DontShow)]
 [string]$room = 'LoggingTest',
 [switch]$csv,
 [switch]$hipchat,
