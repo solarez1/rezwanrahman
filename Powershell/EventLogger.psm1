@@ -43,7 +43,7 @@ param(
 [string]$message,
 [ValidateNotNullOrEmpty()]
 [string]$eventid=10000,
-[string]$apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y',
+[string]$apitoken = 'default',
 [string]$room = 'LoggingTest',
 [switch]$csv,
 [switch]$hipchat,
@@ -63,11 +63,11 @@ $color = 'red'
 }
 
 if($source -eq 'Database'){
-    $apitoken = 'YM5buOY4w0j0pOLmsx3mM6HvwOnuIr23Nu1lD8lA'
+    $apitoken = 'secret'
     $room = 'Zabbix Project'
 }
 if($source -eq 'Automation'){
-    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
+    $apitoken = 'secret'
     $room = 'LoggingTest'
 }
 
@@ -124,7 +124,7 @@ if($csv){
             }
         }
     else{
-    Register-PSRepository -Name CloudOps -SourceLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+    Register-PSRepository -Name CloudOps -SourceLocation secreturl -PublishLocation secreturl -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
     Install-Module hipchat -Repository CloudOps -Force
     Send-Hipchat @hipchatout
         }
