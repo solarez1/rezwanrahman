@@ -15,6 +15,8 @@
    General notes
 .FUNCTIONALITY
    The functionality that best describes this cmdlet
+.AUTHOR
+   Rezwan Rahman - Automation Team Lead
 #>
 
 #write event log
@@ -162,5 +164,3 @@ function Write-csv {
          ScriptName = $MyInvocation.MyCommand.Name
      } | Export-Csv -Path "$env:Temp\EventLog-$(Get-Date -f yyMMdd).csv" -Append -NoTypeInformation -Force
  }
-
- #send email
