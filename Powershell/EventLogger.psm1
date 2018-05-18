@@ -49,6 +49,8 @@ param(
 [string]$apitoken = 'default',
 [Parameter(DontShow)]
 [string]$room = 'LoggingTest',
+[Parameter(DontShow)]
+[string]$script = $($MyInvocation.MyCommand.ModuleName),
 [switch]$csv,
 [switch]$hipchat,
 [Parameter(ParameterSetName='warning')]
@@ -57,7 +59,7 @@ param(
 [switch]$error
 )
 
-$message = $message + "`r`n`r`nScript: $($MyInvocation.MyCommand.ModuleName)" + "`r`n`r`nOn Machine: $env:computername" + "`r`n`r`nOwned By: $source"
+$message = $message + "`r`n`r`nScript: $script" + "`r`n`r`nOn Machine: $env:computername" + "`r`n`r`nOwned By: $source"
 
 if($warning){
 $color = 'yellow'
