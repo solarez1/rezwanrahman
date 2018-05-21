@@ -29,7 +29,7 @@ def hipchat_notify(token, room, message, color='yellow', notify=False,
     host: str, optional
         Host to connect to, defaults to api.hipchat.com
 
-    example: python -c "from hipchat_notify import hipchat_notify; hipchat_notify('8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y', 'LoggingTest', 'From py blah blah blah', 'red')"
+    example: python -c "from hipchat_notify import hipchat_notify; hipchat_notify('room_id', 'LoggingTest', 'From py blah blah blah', 'red')"
     """
 
     if len(message) > 1000:
@@ -75,12 +75,3 @@ def log_file(message, *log):
         out = '%s \n' %message
         f.write(out)
         f.close
-
-'''
-try:
-    hipchat_notify('8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y', 'LoggingTest', 'From Python')
-except Exception as e:
-        msg = "[ERROR] HipChat notify failed: '{0}'".format(e)
-        print(msg, file=sys.stderr)
-        sys.exit(1)
-'''
