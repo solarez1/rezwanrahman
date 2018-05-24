@@ -23,7 +23,6 @@ host: str, optional
 example: 
 python -c "from hipchat_notify import hipchat_notify; hipchat_notify('8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y', 'LoggingTest', 'From py blah blah blah','Automation','red')"
 """
-#Things to do
 
 from __future__ import print_function
 import requests
@@ -33,32 +32,32 @@ import datetime
 import os
 import csv
 
-def hipchat_notify(token, room, message, owner, color='purple', notify=False,
+def hipchat_notify(token, room, message, owner, file, color='purple', notify=False,
                    format='text', host='api.hipchat.com'):
 
     owners = ['Automation', 'Database', 'Platform', 'Custom']
     if owner not in owners:        
         error = ValueError("Invalid Owner. Expected one of: {0}".format(owners))
         print(error)
-        return log_file(error, 'true')
+        return log_file(error, owner, file, 'true',)
     if len(message) > 1000:
         error = ValueError('Message too long')
         print(error)
-        return log_file(error, 'true')
+        return log_file(error, owner, file, 'true',)
     if format not in ['text', 'html']:
         error = ValueError("Invalid message format '{0}'".format(format))
         print(error)
-        return log_file(error, 'true')
+        return log_file(error, owner, file, 'true',)
     if color not in ['yellow', 'green', 'red', 'purple', 'gray', 'random']:
         error = ValueError("Invalid color {0}".format(color))
         print(error)
-        return log_file(error, 'true')
+        return log_file(error, owner, file, 'true',)
     if not isinstance(notify, bool):
         error = TypeError("Notify must be boolean")
         print(error)
-        return log_file(error,'true')
+        return log_file(error, owner, file, 'true',)
     else:
-        script = script_name(owner)
+        script = script_name(owner, file)
         print (message + ' ' + script)
         output = ( 'Error: ' + message + ' From: ' + script)
         url = "https://{0}/v2/room/{1}/notification".format(host, room)
@@ -72,9 +71,9 @@ def hipchat_notify(token, room, message, owner, color='purple', notify=False,
         }
         r = requests.post(url, data=json.dumps(payload), headers=headers)
         r.raise_for_status()
-        return log_file(message, owner,'true',)
+        return log_file(message, owner, file, 'true',)
 
-def log_file(message, owner, *log, path='c:/errorlogging/'):
+def log_file(message, owner, file, *log, path='c:/errorlogging/'):
     if not log:
         print(message)
     else:
@@ -86,7 +85,7 @@ def log_file(message, owner, *log, path='c:/errorlogging/'):
         out = '%s \n' %message
         f.write(out)
         f.close
-        script = script_name(owner)
+        script = script_name(owner,file)
         filecsv = path + "errorlog-%s.csv" %createtime
         time = now.strftime("%Y%m%d-%X")
         print(time)
@@ -96,8 +95,9 @@ def log_file(message, owner, *log, path='c:/errorlogging/'):
             #filewriter.writerow(['Time','Message','Script'])
             filewriter.writerow([time,message,script])
 
-def script_name(owner):
-    script = os.path.realpath(os.path.dirname(sys.argv[0]))
+def script_name(owner, file):
+    #script = os.path.realpath(os.path.dirname(sys.argv[0])) #Shows just path to directory of script
+    script = "%s"%file
     environ = os.environ['COMPUTERNAME']
     return script + ' On Machine: ' + environ + ' Owned By: ' + owner
 
