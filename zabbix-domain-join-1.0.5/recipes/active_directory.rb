@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-# Stuart Caine : October 2016
+# Rezwan Rahman : October 2016
 #
 # Joins AWS-based Instances to SDLPRODUCTS Active Directory, and places the Instance into the correct Regional OU
 
