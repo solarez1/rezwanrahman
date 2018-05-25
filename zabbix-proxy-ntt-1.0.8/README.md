@@ -42,7 +42,6 @@ Just include `zabbix-proxy-ntt` in your node's `run_list`:
 License and Authors
 -------------------
 Authors:
-
-Stuart Caine - Senior Engineer : December 2017
+Rezwan Rahman - Senior Engineer : December 2017
 
 All rights reserved SDL International Plc 2017
