@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-# Stuart Caine : January 2018
+# Rezwan Rahman: January 2018
 #
 # Performs Base Configuration For All SDL AWS-Based Infrastructure
 
