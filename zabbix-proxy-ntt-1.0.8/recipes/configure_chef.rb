@@ -3,7 +3,7 @@
 # Recipe:: configure-chef
 #
 # Copyright 2017, SDL International Plc
-# Author: Stuart Caine
+# Author: Rezwan Rahman
 #
 # All rights reserved - Do Not Redistribute
 #
