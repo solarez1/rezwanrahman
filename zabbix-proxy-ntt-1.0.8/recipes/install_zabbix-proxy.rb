@@ -3,8 +3,8 @@
 # Recipe:: install_zabbix-proxy.rb
 #
 # Copyright 2017, SDL International Plc
-# Author: Stuart Caine
-#
+# Author: Rezwan Rahman
+
 # All rights reserved - Do Not Redistribute
 #
 # Configures Zabbix Proxy per SDL requirements
