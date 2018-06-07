@@ -38,3 +38,17 @@ catch [Exception]
         #calling the logging function in a new try/catch block for a general exception
         write-log @eventlogger -message $_ -line $a -warning | Out-Null
     }
+
+<em>Output Examples</em>
+
+<strong>Hipchat</strong>
+
+![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-0-17.png)
+
+<strong>CSV</strong>
+
+![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-7-7.png)
+
+<strong>EventViewer</strong>
+ 
+![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-8-2.png)
