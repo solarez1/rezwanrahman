@@ -1,3 +1,6 @@
+
+<em>Usage Example</em>
+
 #Event Logger Usage example
 
 Import-Module EventLogger
