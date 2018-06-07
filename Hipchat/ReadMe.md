@@ -19,7 +19,7 @@ def test_func():
  
         return hipchat_notify('8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y', 'LoggingTest', message, 'Database', __file__, 'red')
 
-<b>Output Examples</b>
+<em>Output Examples</em>
 
 <strong>Hipchat</strong>
 
