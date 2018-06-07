@@ -18,3 +18,7 @@ def test_func():
         message = str(exception)
  
         return hipchat_notify('8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y', 'LoggingTest', message, 'Database', __file__, 'red')
+
+Output Examples
+
+![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-0-17.png)
