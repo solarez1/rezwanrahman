@@ -1,5 +1,5 @@
 #Usage Example of the logging module
-
+```
 import sys
  
 sys.path.insert(0,"C:\\Users\\rrahman\\Documents\\myPythonProjects\\Hipchat")
@@ -18,7 +18,7 @@ def test_func():
         message = str(exception)
  
         return hipchat_notify('8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y', 'LoggingTest', message, 'Database', __file__, 'red')
-
+```
 <em>Output Examples</em>
 
 <strong>Hipchat</strong>
