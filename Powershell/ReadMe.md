@@ -1,6 +1,6 @@
 
 <em>Usage Example</em>
-
+```
 #Event Logger Usage example
 
 Import-Module EventLogger
@@ -41,7 +41,7 @@ catch [Exception]
         #calling the logging function in a new try/catch block for a general exception
         write-log @eventlogger -message $_ -line $a -warning | Out-Null
     }
-
+```
 <em>Output Examples</em>
 
 <strong>Hipchat</strong>
