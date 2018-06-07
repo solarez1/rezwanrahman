@@ -21,12 +21,14 @@ def test_func():
 
 <b>Output Examples</b>
 
-<u>Hipchat</u>
+<strong>Hipchat</strong>
 
 ![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-0-17.png)
 
-<u>CSV</u>
+CSV
+
 ![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-7-7.png)
 
-<u>EventViewer</u>
+EventViewer
+ 
 ![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-8-2.png)
