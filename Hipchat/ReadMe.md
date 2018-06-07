@@ -1,4 +1,15 @@
-#Usage Example of the logging module
+
+# Description
+
+A Python helper module that allows trapping of code errors and outputting it to relevant media, to notify end users of the issue so it can be troubleshooted.
+
+# Output Locations
+- Hipchat
+- CSV
+- Text File
+
+# Usage
+
 ```
 import sys
  
