@@ -25,10 +25,10 @@ def test_func():
 
 ![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-0-17.png)
 
-CSV
+<strong>CSV</strong>
 
 ![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-7-7.png)
 
-EventViewer
+<strong>EventViewer</strong>
  
 ![alt text](https://github.com/solarez1/rezwanrahman/blob/master/Hipchat/image2018-5-24_17-8-2.png)
