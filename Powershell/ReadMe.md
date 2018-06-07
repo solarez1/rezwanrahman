@@ -1,5 +1,16 @@
-# Event Logger Read Me
+# Event Logger
 
+# Description
+
+A PS helper module that allows trapping of code errors and outputting it to relevant media, to notify end users of the issue so it can be troubleshooted.
+
+# Output Locations
+-Hipchat
+-CSV
+-Text File
+-Event Log
+
+# Usage
 <em>Usage Example</em>
 ```
 #Event Logger Usage example
