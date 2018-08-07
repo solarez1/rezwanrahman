@@ -12,11 +12,9 @@
 .OUTPUTS
    Output from this cmdlet (if any)
 .NOTES
-   General notes
+   When testing a module, make sure you run import-module <module name> before running the code
 .FUNCTIONALITY
    The functionality that best describes this cmdlet
-.AUTHOR
-   Rezwan Rahman - Automation Team Lead
 #>
 
 #write event log
@@ -36,69 +34,122 @@ param(
             Throw "Please make sure the NETBIOS name is no longer than 15 characters!"
         }})] 
 [string]$computername=$env:computername,
+[string]$jobname = $($env:JOB_NAME),
 [ValidateNotNullOrEmpty()]
-[ValidateScript({If ($_ -match '[a-zA-Z0-9" "]{10,}') {
+[ValidateScript({If ($_ -match '[a-zA-Z0-9" "]{5,}') {
             $True
         } Else {
-            Throw "Please make sure your message is longer than 10 characters!"
+            Throw "Please make sure your message is longer than 5 characters!"
         }})] 
 [string]$message,
 [ValidateNotNullOrEmpty()]
 [string]$eventid=10000,
 [Parameter(DontShow)]
-[string]$apitoken = 'default',
+[string]$apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y',
 [Parameter(DontShow)]
 [string]$room = 'LoggingTest',
+[string]$line,
 [Parameter(DontShow)]
 [string]$script = $($MyInvocation.MyCommand.ModuleName),
 [switch]$csv,
 [switch]$hipchat,
+[switch]$msteams,
 [Parameter(ParameterSetName='warning')]
 [switch]$warning,
 [Parameter(ParameterSetName='error')]
-[switch]$error
+[switch]$error,
+[Parameter(ParameterSetName='info')]
+[switch]$info
 )
-
-$message = $message + "`r`n`r`nScript: $script" + "`r`n`r`nOn Machine: $env:computername" + "`r`n`r`nOwned By: $source"
+if($computername -like "*JEN*"){
+$message = $message + "`r`n`r`nScript: $script" + "`r`n`r`nJenkins Job Name: " + $jobname + "`r`n`r`nOn Machine: $env:computername" + "`r`n`r`nOwned By: $source" 
+}
+else{
+$message = $message + "`r`n`r`nScript: $script" + "`r`n`r`nOn Machine: $env:computername" + "`r`n`r`nOwned By: $source" 
+}
 
 if($warning){
 $color = 'yellow'
+$entrytype = 'Warning'
+$themecolor = '#A0A000'
 }
 if($error){
 $color = 'red'
+$entrytype = 'Error'
+$themecolor = '#A00000'
 }
-
+if($info){
+$color = 'green'
+$entrytype = 'Information'
+$themecolor = '#00A000'
+}
 if($source -eq 'Database'){
-    $apitoken = 'secret'
-    $room = 'Zabbix Project'
+    $apitoken = 'fJpZMAj5Hobl6QMrVDgnF1wkeuZWAMnDd8mIQO6g'
+    $room = 'Database - Logging Test'
+    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 if($source -eq 'Automation'){
-    $apitoken = 'secret'
+    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
     $room = 'LoggingTest'
+    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+}
+if($source -eq 'Platform'){
+    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
+    $room = 'LoggingTest'
+    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+}
+if($source -eq 'Custom'){
+    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
+    $room = 'LoggingTest'
+    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+}
+if($source -eq 'GCT'){
+    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
+    $room = 'LoggingTest'
+    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+}
+if($source -eq 'EPTP'){
+    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
+    $room = 'LoggingTest'
+    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 
 $eventout = @{
 LogName = $logname
-Message = $message
+Message = "Line Number: $line`r`n`r`n" + $message
 EventId = $eventid
 ComputerName = $computername
 Source = $source
-EntryType = 'Error'
+EntryType = $entrytype
 }
 
 $csvout = @{
 eventid = $eventid
 computerName = $computername
 source = $source
-message = $message
+message = "Line Number: $line`r`n`r`n" + $message
 logName = $logname
 }
 
 $hipchatout = @{
-Message = $message
+Message = "Line Number: $line " + ' ' +$message
 Apitoken = $apitoken
 Room = $room
 color = $color
+}
+
+$msteamsout = @{
+Message = "Line Number: $line " + ' ' +$message
+webhook = $webhook
+incomingwebhook = $incomingwebhook
+color = $themecolor
+title = $entrytype
 }
 
 if(([System.Diagnostics.EventLog]::Exists($logname)) -and ([System.Diagnostics.EventLog]::SourceExists($source)) -eq $true){
@@ -130,9 +181,27 @@ if($csv){
             }
         }
     else{
-    Register-PSRepository -Name CloudOps -SourceLocation secreturl -PublishLocation secreturl -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+    Register-PSRepository -Name CloudOps -SourceLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
     Install-Module hipchat -Repository CloudOps -Force
     Send-Hipchat @hipchatout
+        }
+    
+    }
+    if($msteams){
+    #Register the CloudOps repository for PowerShell modules
+    if((get-psrepository -Name CloudOps).name -ne $null){
+        if ((Get-Module -Name MSTeams).name -ne $null){
+            Send-MSTeams @msteamsout
+        }
+        else{
+        Install-Module MSTeams -Repository CloudOps -Force
+        Send-MSTeams @msteamsout
+            }
+        }
+    else{
+    Register-PSRepository -Name CloudOps -SourceLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+    Install-Module MSTeams -Repository CloudOps -Force
+    Send-MSTeams @msteamsout
         }
     
     }
@@ -165,6 +234,10 @@ function Write-csv {
          Source = $source
          Message = $Message
          LogName = $logname
-         ScriptName = $MyInvocation.MyCommand.Name
      } | Export-Csv -Path "$env:Temp\EventLog-$(Get-Date -f yyMMdd).csv" -Append -NoTypeInformation -Force
  }
+
+#Line Number
+ Function Get-CurrentLine {
+    $Myinvocation.ScriptlineNumber
+}
