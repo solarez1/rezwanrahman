@@ -8,7 +8,7 @@ import sys
 sys.path.insert(0,"C:\\Users\\rrahman\\Documents\\myPythonProjects\\Hipchat")
 from hipchat_notify import hipchat_notify
 
-def zabbix_add_item(zabbix_server='https://zabbix-web.sdlproducts.com/zabbix/', hostname='ZABBIXTEST-FHAR', username='rrahman', password='R32wan1234'):
+def zabbix_add_item(zabbix_server='https://zabbix-web.sdlproducts.com/zabbix/', hostname='ZABBIXTEST-FHAR', username='rrahman', password='MyPassword'):
 
     # The hostname at which the Zabbix web interface is available
     ZABBIX_SERVER = zabbix_server
