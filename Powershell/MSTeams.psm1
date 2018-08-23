@@ -42,8 +42,8 @@ function Send-MSTeams {
         [ValidateSet('#A00000', '#00A000', '#A0A000')][string]$color = '#A00000',
         [ValidateSet('Error', 'Information', 'Warning')][string]$title = 'Information',
         [switch]$notify,
-        [Parameter(Mandatory = $True)][string]$webhook = "b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292",   
-        [Parameter(Mandatory = $True)][string]$incomingwebhook = "9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f",
+        [Parameter(Mandatory = $True)][string]$webhook = "b6c86safafasdasfaff1dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292",   
+        [Parameter(Mandatory = $True)][string]$incomingwebhook = "9d5fasfsafsafafasfe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f",
         [int]$retry = 0,
         [int]$retrysecs = 30
     )
