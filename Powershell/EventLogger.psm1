@@ -181,7 +181,7 @@ if($csv){
             }
         }
     else{
-    Register-PSRepository -Name CloudOps -SourceLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+    Register-PSRepository -Name CloudOps -SourceLocation https://secret/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
     Install-Module hipchat -Repository CloudOps -Force
     Send-Hipchat @hipchatout
         }
@@ -199,7 +199,7 @@ if($csv){
             }
         }
     else{
-    Register-PSRepository -Name CloudOps -SourceLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+    Register-PSRepository -Name CloudOps -SourceLocation https://secret/repository/powershell-modules/ -PublishLocation https://cloudops-nexus.sdlproducts.com/repository/powershell-modules/ -PackageManagementProvider nuget -InstallationPolicy Trusted -ErrorAction SilentlyContinue
     Install-Module MSTeams -Repository CloudOps -Force
     Send-MSTeams @msteamsout
         }
