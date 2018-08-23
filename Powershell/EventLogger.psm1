@@ -45,7 +45,7 @@ param(
 [ValidateNotNullOrEmpty()]
 [string]$eventid=10000,
 [Parameter(DontShow)]
-[string]$apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y',
+[string]$apitoken = '8OaIJuU0ViOvav3SAsE504Q3asfafafsafXkVxpmPG8Zadq70y',
 [Parameter(DontShow)]
 [string]$room = 'LoggingTest',
 [string]$line,
@@ -84,40 +84,40 @@ $entrytype = 'Information'
 $themecolor = '#00A000'
 }
 if($source -eq 'Database'){
-    $apitoken = 'fJpZMAj5Hobl6QMrVDgnF1wkeuZWAMnDd8mIQO6g'
+    $apitoken = 'fJpZMAj5Hobasefasfesafl6QMrVDgnF1wkeuZWAMnDd8mIQO6g'
     $room = 'Database - Logging Test'
-    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
-    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+    $webhook = 'b6c861easfeasefsasfasfdc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232asefasefasfsesafae244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 if($source -eq 'Automation'){
-    $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
+    $apitoken = '8OaIJuU0ViOvav3SasefasfsafeAsE504Q3XkVxpmPG8Zadq70y'
     $room = 'LoggingTest'
-    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
-    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+    $webhook = 'b6asasfsaefsc86asfasefsafesafsef1dc-59e5-4b0asfeasfeeasfs7-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244asefasefasfasfeasf178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 if($source -eq 'Platform'){
     $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
     $room = 'LoggingTest'
-    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
-    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+    $webhook = 'b6c8saefasefasefasfseafsaefas61dc-59e5-4basefasefasf07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e4asefasfeasfe64fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 if($source -eq 'Custom'){
     $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
     $room = 'LoggingTest'
-    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
-    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+    $webhook = 'b6casefasefasefasfeasfeaseaf86asefasefasef1dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232easefasefgfawwrqweddxcg244178e464fbe2bc41gaesvjhyjuj142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 if($source -eq 'GCT'){
     $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
     $room = 'LoggingTest'
-    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
-    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+    $webhook = 'b6c86jyutrjawefsffd1dc-59e5-4b07-a7fb-b5yejtherhtc9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe922weaesdfryy6ewrghyyte2e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 if($source -eq 'EPTP'){
     $apitoken = '8OaIJuU0ViOvav3SAsE504Q3XkVxpmPG8Zadq70y'
     $room = 'LoggingTest'
-    $webhook = 'b6c861dc-59e5-4b07-a7fb-b5c9ac2c46d6@df02c2f8-e418-484f-8bd6-c7f2e154f292'
-    $incomingwebhook = '9d5fe92232e244178e464fbe2bc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
+    $webhook = 'b6c8asdfasdfasdgaetga6sadfasef1dc-59easefaesgasegaeesfas5-4b07-a7fb-b5c9ac2c46d6asdefasdfasdf@df02c2f8-e418-484f-8bd6-c7f2e154f292'
+    $incomingwebhook = '9d5fe92232e244178e464fbe2brewtwergfhtrhyeawc41142/e71f6c21-635a-4639-a6b3-7a2dfe686d3f'
 }
 
 $eventout = @{
