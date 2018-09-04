@@ -6,11 +6,11 @@ from pprint import pprint
 
 searchterm = 'COS'
 allhosts = (zabbix_search_allhostid(searchterm=searchterm,
-                         username='rrahman', password='zabbix123'))
+                         username='user1', password='password'))
 lst = []
 for hosts in allhosts['result']:
 	lst.append(hosts['name'])
 	
 for host in lst:
-	zabbix_get_template(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', 
-		username='rrahman', password='zabbix123', hostname=host)
+	zabbix_get_template(zabbix_server='https://zabbixurl', 
+		username='user1', password='password', hostname=host)
