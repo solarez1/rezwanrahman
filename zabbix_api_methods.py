@@ -17,7 +17,7 @@ Python Module to carry out methods on the Zabbix Server
 
 Rezwan Rahman
 
-#https://zabbix-web.sdlproducts.com/zabbix/
+#https://test/zabbix/
 
 '''
 import requests
@@ -29,7 +29,7 @@ sys.path.insert(0, "C:\\Users\\rrahman\\Documents\\myPythonProjects\\Hipchat")
 from hipchat_notify import *
 
 
-def zabbix_login(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', username='', password=''):
+def zabbix_login(zabbix_server='https://test/zabbix/', username='', password=''):
 
   ZABBIX_ROOT = zabbix_server
   url = ZABBIX_ROOT + 'api_jsonrpc.php'
