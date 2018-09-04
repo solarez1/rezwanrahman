@@ -54,7 +54,7 @@ def zabbix_login(zabbix_server='https://test/zabbix/', username='', password='')
   return (res['result'])
 
 
-def zabbix_get_hostid(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', hostname='NP-STH-01-GS-157', username='', password=''):
+def zabbix_get_hostid(zabbix_server='https://test/zabbix/', hostname='NP-STH-01-GS-157', username='', password=''):
 
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
@@ -102,7 +102,7 @@ def zabbix_get_hostid(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.ne
   return (res2['result'][0]['hostid'])
 
 
-def zabbix_get_allhostid(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', username='', password=''):
+def zabbix_get_allhostid(zabbix_server='https://test/zabbix/', username='', password=''):
 
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
@@ -131,7 +131,7 @@ def zabbix_get_allhostid(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid
   pprint(res2)
   return(res2)
 
-def zabbix_search_allhostid(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', username='', password='', searchterm='' ):
+def zabbix_search_allhostid(zabbix_server='https://test/zabbix/', username='', password='', searchterm='' ):
 
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
@@ -162,7 +162,7 @@ def zabbix_search_allhostid(zabbix_server='https://zabbix.cloudmatchbeta.nvidiag
   pprint(res2)
   return(res2)
 
-def zabbix_add_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', hostname='NP-STH-01-GS-157', username='', password='',
+def zabbix_add_item(zabbix_server='https://test/zabbix/', hostname='Server1', username='', password='',
                     itemname='blahdeblah', key='net.if.list', ptype='0', vtype='0'):
 
   ZABBIX_SERVER = zabbix_server
@@ -205,7 +205,7 @@ def zabbix_add_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/
     return hipchat_notify(message, 'Automation', __file__, 'yellow')
 
 
-def zabbix_get_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', hostname='NP-STH-01-GS-157', username='', password='', searchterm='system'):
+def zabbix_get_item(zabbix_server='https://test/zabbix/', hostname='Server1', username='', password='', searchterm='system'):
 
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
@@ -247,7 +247,7 @@ def zabbix_get_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/
   return (items)
 
 
-def zabbix_update_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', username='', password='', item='12345', status='0'):
+def zabbix_update_item(zabbix_server='https://test/zabbix/', username='', password='', item='12345', status='0'):
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
   zapi.login(username, password)
@@ -270,7 +270,7 @@ def zabbix_update_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.n
   pprint(res2)
 
 
-def zabbix_delete_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', username='', password='', item='12345'):
+def zabbix_delete_item(zabbix_server='https://test/zabbix/', username='', password='', item='12345'):
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
   zapi.login(username, password)
@@ -292,7 +292,7 @@ def zabbix_delete_item(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.n
   pprint(res2)
 
 
-def zabbix_get_template(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/',  username='', password='', hostname='grid-monitor-jenkins-windows-slave-hk'):
+def zabbix_get_template(zabbix_server='https://test/zabbix/',  username='', password='', hostname='Server1'):
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
   zapi.login(username, password)
@@ -332,7 +332,7 @@ def zabbix_get_template(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.
   pprint(items)
   return
 
-def zabbix_search_template(zabbix_server='https://zabbix.cloudmatchbeta.nvidiagrid.net/zabbix/', hostname='NP-STH-01-GS-157', username='', password='', searchterm=''):
+def zabbix_search_template(zabbix_server='https://test/zabbix/', hostname='Server1', username='', password='', searchterm=''):
   res = zabbix_login(username=username, password=password)
   zapi = ZabbixAPI(zabbix_server)
   zapi.login(username, password)
