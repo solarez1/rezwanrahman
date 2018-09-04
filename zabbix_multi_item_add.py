@@ -8,5 +8,5 @@ from pprint import pprint
 
 hosts = ['SNJTESTVM01', 'SNJCPTTEST001']
 for host in hosts:
-	pprint(zabbix_add_item(hostname=host, username='rrahman', password='MyPassword',
+	pprint(zabbix_add_item(hostname=host, username='rrahman', password='R32wan1234',
 	                    itemname='blahdeblah', key='net.if.list', ptype='0', vtype='0'))
