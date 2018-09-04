@@ -5,13 +5,13 @@ Python Module to carry out methods on the Zabbix Server
 .EXAMPLES
 
  python -c "from zabbix_api_methods import *; zabbix_get_allhostid(username='', password='')"
- python -c "from zabbix_api_methods import *; zabbix_get_hostid(hostname='plop', username='', password='')"
+ python -c "from zabbix_api_methods import *; zabbix_get_hostid(hostname='Server1', username='', password='')"
  python -c "from zabbix_api_methods import *; zabbix_get_item(username='', password='',searchterm='blah')"
  python -c "from zabbix_api_methods import *; zabbix_update_item(username='', password='', item='199987', status='0')"
  python -c "from zabbix_api_methods import *; zabbix_add_item(username='', password='', itemname='blahdeblah',key='net.if.list')"
- python -c "from zabbix_api_methods import *; zabbix_get_template(hostname='Aspera-Server1',username='', password='')"
+ python -c "from zabbix_api_methods import *; zabbix_get_template(hostname='Server1',username='', password='')"
  python -c "from zabbix_api_methods import *; zabbix_search_allhostid(searchterm='',username='', password='')"
- python -c "from zabbix_api_methods import *; zabbix_search_template(hostname='COSP-QUAY-CA-ip-10-72-95-194',username='', password='', searchterm='Windows')"
+ python -c "from zabbix_api_methods import *; zabbix_search_template(hostname='Server1',username='', password='', searchterm='Windows')"
 
 .AUTHOR 
 
